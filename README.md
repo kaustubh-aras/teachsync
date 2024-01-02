@@ -1,1 +1,1 @@
-# teachsync
+# TeachSync
