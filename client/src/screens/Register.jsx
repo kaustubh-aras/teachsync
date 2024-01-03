@@ -6,15 +6,33 @@ import {
   TextInput,
   Pressable,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
+import axios from 'axios';
 
 const Register = () => {
   const [inputName, setName] = useState('');
   const [inputEmail, setInputEmail] = useState('');
   const [password, setPassword] = useState('');
   const [inputPhoneNumber, setInputPhoneNumber] = useState('');
+
+  function handleRegister() {
+    console.log('Function Called');
+    const userData = {
+      name: inputName,
+      email: inputEmail,
+      password: password,
+      phone: inputPhoneNumber,
+    };
+
+    axios
+      .post('http://192.168.0.103:3000/register', userData)
+      .then(res => console.log(res.data))
+      .catch(e => console.log(e));
+  }
 
   const navigation = useNavigation();
 
@@ -23,54 +41,66 @@ const Register = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.logo} source={require('../../assets/logo.png')} />
-      <TextInput
-        autoCapitalize="words"
-        style={styles.input}
-        placeholder="Full Name"
-        onChangeText={text => setName(text)}
-        value={inputName}
-      />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.innerContainer}>
+          <Image
+            style={styles.logo}
+            source={require('../../assets/logo.png')}
+          />
+          <TextInput
+            autoCapitalize="words"
+            style={styles.input}
+            placeholder="Full Name"
+            onChangeText={text => setName(text)}
+            value={inputName}
+            maxLength={20}
+          />
 
-      <TextInput
-        autoCapitalize="none"
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={text => setInputEmail(text)}
-        value={inputEmail}
-        keyboardType="email-address"
-      />
+          <TextInput
+            autoCapitalize="none"
+            style={styles.input}
+            placeholder="Email"
+            onChangeText={text => setInputEmail(text)}
+            value={inputEmail}
+            keyboardType="email-address"
+          />
 
-      <TextInput
-        autoCapitalize="none"
-        style={styles.input}
-        placeholder="Password"
-        onChangeText={text => setPassword(text)}
-        value={password}
-        secureTextEntry={true}
-      />
+          <TextInput
+            maxLength={16}
+            autoCapitalize="none"
+            style={styles.input}
+            placeholder="Password"
+            onChangeText={text => setPassword(text)}
+            value={password}
+            secureTextEntry={true}
+          />
 
-      <TextInput
-        autoCapitalize="none"
-        style={styles.input}
-        placeholder="Phone Number"
-        onChangeText={text => setInputPhoneNumber(text)}
-        value={inputPhoneNumber}
-        keyboardType="numeric"
-      />
+          <TextInput
+            autoCapitalize="none"
+            style={styles.input}
+            placeholder="Phone Number"
+            onChangeText={text => setInputPhoneNumber(text)}
+            value={inputPhoneNumber}
+            keyboardType="numeric"
+          />
 
-      <Pressable style={styles.buttonregister}>
-        <Text style={styles.buttonText}>REGISTER</Text>
-      </Pressable>
+          {/* REGISTER BUTTON  */}
+          <Pressable style={styles.buttonregister} onPress={handleRegister}>
+            <Text style={styles.buttonText}>REGISTER</Text>
+          </Pressable>
 
-      <View style={styles.loginContainer}>
-        <Text>Already have an account?</Text>
-        <TouchableOpacity onPress={goToLogin}>
-          <Text style={[styles.loginText]}>Login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <View style={styles.loginContainer}>
+            <Text>Already have an account?</Text>
+            <TouchableOpacity onPress={goToLogin}>
+              <Text style={[styles.loginText]}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -79,10 +109,16 @@ export default Register;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: 'black',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  innerContainer: {
+    width: '100%',
+    alignItems: 'center',
   },
   logo: {
     width: 150,
