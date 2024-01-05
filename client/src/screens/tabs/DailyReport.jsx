@@ -1,10 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-export default function Home() {
+export default function DailyReport() {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text style={{color: 'black'}}>Daily Reporttt</Text>
     </View>
   );
 }
@@ -12,7 +12,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },

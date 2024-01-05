@@ -48,7 +48,7 @@ const Register = () => {
         <View style={styles.innerContainer}>
           <Image
             style={styles.logo}
-            source={require('../../assets/logo.png')}
+            source={require('../../../assets/logo.png')}
           />
           <TextInput
             autoCapitalize="words"
