@@ -18,14 +18,14 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (inputText === 'admin@gmail.com' && password === 'admin') {
-      navigation.navigate('Home');
-    } else {
-      Alert.alert(
-        'Invalid Credentials',
-        'Please enter valid email and password.',
-      );
-    }
+    // if (inputText === 'admin@gmail.com' && password === 'admin') {
+      navigation.navigate('MyTabs');
+  //   } else {
+  //     Alert.alert(
+  //       'Invalid Credentials',
+  //       'Please enter valid email and password.',
+  //     );
+  //   }
   };
 
   const handleRegister = () => {
@@ -34,7 +34,7 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.logo} source={require('../../assets/logo.png')} />
+      <Image style={styles.logo} source={require('../../../assets/logo.png')} />
 
       <TextInput
         autoCapitalize="none"
