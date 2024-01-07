@@ -1,11 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const PORT = 3000;
 
 const mongoUrl =
-"mongodb+srv://kaustubhrx:smhi5syncmax1511@cluster0.zgwhhu3.mongodb.net/?retryWrites=true&w=majority";
+  "mongodb+srv://kaustubhrx:smhi5syncmax1511@cluster0.zgwhhu3.mongodb.net/?retryWrites=true&w=majority";
+
+const JWT_SECRET =
+  "dfsnjnsdksk&*^&%^&msdfksdmksmkfmslldfssdaffgsdgsdg{(sdjfndjn{]}4463fsdfsfl";
 
 app.use(express.json());
 mongoose
@@ -27,11 +32,12 @@ app.get("/", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const { name, email, password, phone } = req.body;
+  console.log(req.body);
 
-  const oldUser = await user.findOne({email:email});
+  const oldUser = await user.findOne({ email: email });
 
   if (oldUser) {
-    return res.send({data:"Email already exist!"});
+    return res.send({ data: "Email already exist!" });
   }
 
   try {
@@ -44,6 +50,25 @@ app.post("/register", async (req, res) => {
     res.send({ status: "ok", data: "User Created" });
   } catch (error) {
     res.send({ staus: "error", data: error });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const oldUser = await user.findOne({ email: email });
+
+  if (!oldUser) {
+    return res.send({ data: "User does not exist!" });
+  }
+
+  if (await (password, oldUser.password)) {
+    const token = jwt.sign({ email: oldUser.email }, JWT_SECRET);
+
+    if (res.status(201)) {
+      return res.send({ staus: "ok", data: token });
+    } else {
+      return res.send({ error: "error" });
+    }
   }
 });
 
