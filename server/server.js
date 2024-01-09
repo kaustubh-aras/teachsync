@@ -1,23 +1,22 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const app = express();
-const PORT = 3000;
-
-const mongoUrl =
-  "mongodb+srv://kaustubhrx:smhi5syncmax1511@cluster0.zgwhhu3.mongodb.net/?retryWrites=true&w=majority";
-
-const JWT_SECRET =
-  "dfsnjnsdksk&*^&%^&msdfksdmksmkfmslldfssdaffgsdgsdg{(sdjfndjn{]}4463fsdfsfl";
+const PORT =  process.env.PORT || 3000;
+const mongoUrl = process.env.CONNECTIONSTRING;
+const JWT_SECRET = process.env.PUBLICKEY;
 
 app.use(express.json());
+
 mongoose
   .connect(mongoUrl)
   .then(() => {
     console.log("Database Connected");
   })
+
   .catch((e) => {
     console.log(e);
   });
