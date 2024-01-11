@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -13,12 +12,14 @@ import Scheduler from './tabs/Scheduler';
 import DailyReport from './tabs/DailyReport';
 import MonthlyReport from './tabs/MonthlyReport';
 import Profile from './tabs/Profile';
+import EditProfile from './utils/EditProfile';
 
 //Icons
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
+// Navigation Initialization
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -27,8 +28,11 @@ function MyTabs() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'grey',
+        tabBarStyle: {
+          backgroundColor: 'black',
+        },
       }}>
       <Tab.Screen
         name="Home"
@@ -91,6 +95,7 @@ export default function Navigation() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="MyTabs" component={MyTabs} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );
