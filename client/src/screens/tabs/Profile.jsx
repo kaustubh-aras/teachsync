@@ -14,7 +14,7 @@ export default function Profile() {
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <View style={styles.container1}>
         <Image
-          source={require('../../../assets/profile.jpeg')}
+          source={require('../../assets/profile.jpeg')}
           style={{
             justifyContent: 'center',
             alignContent: 'center',
