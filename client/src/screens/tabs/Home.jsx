@@ -4,7 +4,7 @@ import React from 'react';
 export default function Home() {
   return (
     <View style={styles.container}>
-      <Text style={{color: 'black'}}>Home</Text>
+      <Text style={{color: 'white'}}>Home</Text>
     </View>
   );
 }
@@ -12,7 +12,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
   },

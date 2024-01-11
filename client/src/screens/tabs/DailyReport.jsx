@@ -4,7 +4,7 @@ import React from 'react';
 export default function DailyReport() {
   return (
     <View style={styles.container}>
-      <Text style={{color: 'black'}}>Daily Reporttt</Text>
+      <Text style={{color: 'white'}}>Daily Reporttt</Text>
     </View>
   );
 }
@@ -12,7 +12,7 @@ export default function DailyReport() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
   },
