@@ -20,9 +20,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
   },
-  {
-    collection: "Users",
-  }
+  { timestamps: true }
 );
 
-mongoose.model("Users", userSchema);
+module.exports = mongoose.model("User", userSchema);
