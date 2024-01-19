@@ -4,7 +4,6 @@ import {
   View,
   Image,
   TextInput,
-  Pressable,
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
@@ -14,25 +13,83 @@ import {useState} from 'react';
 import axios from 'axios';
 
 const Register = () => {
+  
   const [inputName, setName] = useState('');
   const [inputEmail, setInputEmail] = useState('');
   const [password, setPassword] = useState('');
   const [inputPhoneNumber, setInputPhoneNumber] = useState('');
 
-  function handleRegister() {
-    console.log('Function Called');
-    const userData = {
-      name: inputName,
-      email: inputEmail,
-      password: password,
-      phone: inputPhoneNumber,
-    };
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
 
-    axios
-      .post('http://192.168.0.103:3000/register', userData)
-      .then(res => console.log(res.data))
-      .catch(e => console.log(e));
-  }
+  const handleRegister = async () => {
+    try {
+      // Reset errors
+      setNameError('');
+      setEmailError('');
+      setPasswordError('');
+      setPhoneError('');
+
+      if (!inputName) {
+        setNameError('Please enter your name');
+        return;
+      }
+
+      if (!inputEmail) {
+        setEmailError('Email address is required');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(inputEmail)) {
+        setEmailError('Please enter a valid email address');
+        return;
+      }
+
+      if (!password) {
+        setPasswordError('Password is required');
+        return;
+      }
+
+      const passwordValidate = password.length < 8 || password.length > 16;
+      if (passwordValidate) {
+        setPasswordError('Please enter a valid password (8-16 characters)');
+        return;
+      }
+
+      if (!inputPhoneNumber) {
+        setPhoneError('Phone number is required');
+        return;
+      }
+
+      const userData = {
+        name: inputName,
+        email: inputEmail,
+        password: password,
+        phone: inputPhoneNumber,
+      };
+
+      const response = await axios.post(
+        'http://192.168.0.103:3000/api/v1/auth/register',
+        userData,
+      );
+      if (response.data.error) {
+        Alert.alert('Registration Failed', response.data.error);
+        return;
+      }
+
+      setName('');
+      setInputEmail('');
+      setPassword('');
+      setInputPhoneNumber('');
+
+      navigation.navigate('MyTabs');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const navigation = useNavigation();
 
@@ -50,47 +107,69 @@ const Register = () => {
             style={styles.logo}
             source={require('../../assets/logo.png')}
           />
-          <TextInput
-            autoCapitalize="words"
-            style={styles.input}
-            placeholder="Full Name"
-            onChangeText={text => setName(text)}
-            value={inputName}
-            maxLength={20}
-          />
+          <View>
+            <TextInput
+              autoCapitalize="words"
+              style={[styles.input, nameError && styles.errorInput]}
+              placeholder="Full Name"
+              onChangeText={text => setName(text)}
+              value={inputName}
+              maxLength={20}
+            />
+            {nameError ? (
+              <Text style={styles.errorText}>{nameError}</Text>
+            ) : null}
+          </View>
 
-          <TextInput
-            autoCapitalize="none"
-            style={styles.input}
-            placeholder="Email"
-            onChangeText={text => setInputEmail(text)}
-            value={inputEmail}
-            keyboardType="email-address"
-          />
+          <View>
+            <TextInput
+              autoCapitalize="none"
+              style={[styles.input, emailError && styles.errorInput]}
+              placeholder="Email"
+              onChangeText={text => setInputEmail(text)}
+              value={inputEmail}
+              keyboardType="email-address"
+            />
+            {emailError ? (
+              <Text style={styles.errorText}>{emailError}</Text>
+            ) : null}
+          </View>
 
-          <TextInput
-            maxLength={16}
-            autoCapitalize="none"
-            style={styles.input}
-            placeholder="Password"
-            onChangeText={text => setPassword(text)}
-            value={password}
-            secureTextEntry={true}
-          />
+          <View>
+            <TextInput
+              maxLength={16}
+              autoCapitalize="none"
+              style={[styles.input, passwordError && styles.errorInput]}
+              placeholder="Password"
+              onChangeText={text => setPassword(text)}
+              value={password}
+              secureTextEntry={true}
+            />
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
+          </View>
 
-          <TextInput
-            autoCapitalize="none"
-            style={styles.input}
-            placeholder="Phone Number"
-            onChangeText={text => setInputPhoneNumber(text)}
-            value={inputPhoneNumber}
-            keyboardType="numeric"
-          />
+          <View>
+            <TextInput
+              autoCapitalize="none"
+              style={[styles.input, phoneError && styles.errorInput]}
+              placeholder="Phone Number"
+              onChangeText={text => setInputPhoneNumber(text)}
+              value={inputPhoneNumber}
+              keyboardType="numeric"
+            />
+            {phoneError ? (
+              <Text style={styles.errorText}>{phoneError}</Text>
+            ) : null}
+          </View>
 
           {/* REGISTER BUTTON  */}
-          <Pressable style={styles.buttonregister} onPress={handleRegister}>
+          <TouchableOpacity
+            style={styles.buttonregister}
+            onPress={handleRegister}>
             <Text style={styles.buttonText}>REGISTER</Text>
-          </Pressable>
+          </TouchableOpacity>
 
           <View style={styles.loginContainer}>
             <Text>Already have an account?</Text>
@@ -133,6 +212,16 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 50,
     width: 322,
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -15,
+    marginBottom: 8,
   },
   buttonregister: {
     borderColor: 'white',

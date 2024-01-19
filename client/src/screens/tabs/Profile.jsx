@@ -10,6 +10,10 @@ export default function Profile() {
     navigation.navigate('EditProfile');
   }
 
+  function goToLogin() {
+    navigation.navigate('Login');
+  }
+
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <View style={styles.container1}>
@@ -44,7 +48,7 @@ export default function Profile() {
         </TouchableOpacity>
       </View>
       <View style={styles.container2}>
-        <TouchableOpacity style={styles.logOutButton}>
+        <TouchableOpacity style={styles.logOutButton} onPress={goToLogin}>
           <View
             style={{
               flexDirection: 'row',

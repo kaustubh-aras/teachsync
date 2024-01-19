@@ -4,15 +4,15 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 // Screens
-import Home from './tabs/Home';
-import Login from './auth/Login';
-import SplashScreen from './utils/SplashScreen';
-import Register from './auth/Register';
-import Scheduler from './tabs/Scheduler';
-import DailyReport from './tabs/DailyReport';
-import MonthlyReport from './tabs/MonthlyReport';
-import Profile from './tabs/Profile';
-import EditProfile from './utils/EditProfile';
+import Home from '../tabs/Home';
+import Login from '../auth/Login';
+import SplashScreen from '../utils/SplashScreen';
+import Register from '../auth/Register';
+import Scheduler from '../tabs/Scheduler';
+import DailyReport from '../tabs/DailyReport';
+import MonthlyReport from '../tabs/MonthlyReport';
+import Profile from '../tabs/Profile';
+import EditProfile from '../utils/EditProfile';
 
 //Icons
 import Entypo from 'react-native-vector-icons/Entypo';

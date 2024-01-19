@@ -4,58 +4,86 @@ import {
   View,
   Image,
   TextInput,
-  Pressable,
   Alert,
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import axios from 'axios';
+import {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
-  const navigation = useNavigation();
-
-  const [inputText, setInputText] = useState('');
+  const [inputEmail, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // if (inputText === 'admin@gmail.com' && password === 'admin') {
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      // Reset Errors
+      setEmailError('');
+      setPasswordError('');
+
+      if (!inputEmail) {
+        setEmailError('Email is required');
+        return;
+      }
+
+      if (!password) {
+        setPasswordError('Password is required');
+        return;
+      }
+
+      setEmail('');
+      setPassword('');
+
       navigation.navigate('MyTabs');
-  //   } else {
-  //     Alert.alert(
-  //       'Invalid Credentials',
-  //       'Please enter valid email and password.',
-  //     );
-  //   }
+    } catch (error) {
+      console.error('Error during login:', error);
+      Alert.alert('Error', 'An unexpected error occurred.');
+    }
   };
 
+  const navigation = useNavigation();
   const handleRegister = () => {
-    navigation.navigate('Register')
+    navigation.navigate('Register');
   };
 
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={require('../../assets/logo.png')} />
 
-      <TextInput
-        autoCapitalize="none"
-        style={styles.input}
-        placeholder="Enter Email"
-        onChangeText={text => setInputText(text)}
-        value={inputText}
-      />
+      <View>
+        <TextInput
+          autoCapitalize="none"
+          style={[styles.input, emailError && styles.errorInput]}
+          placeholder="Enter Email"
+          onChangeText={text => setEmail(text)}
+          value={inputEmail}
+        />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+      </View>
 
-      <TextInput
-        autoCapitalize="none"
-        style={styles.input}
-        placeholder="Enter password"
-        onChangeText={text => setPassword(text)}
-        value={password}
-        secureTextEntry={true}
-      />
+      <View>
+        <TextInput
+          autoCapitalize="none"
+          style={[styles.input, passwordError && styles.errorInput]}
+          placeholder="Enter password"
+          onChangeText={text => setPassword(text)}
+          value={password}
+          secureTextEntry={true}
+        />
+        {passwordError ? (
+          <Text style={styles.errorText}>{passwordError}</Text>
+        ) : null}
+      </View>
 
-      <Pressable style={styles.buttonlogin} onPress={handleLogin}>
-        <Text style={styles.buttonText}>LOGIN</Text>
-      </Pressable>
+      <View>
+        <TouchableOpacity style={styles.buttonlogin} onPress={handleLogin}>
+          <Text style={styles.buttonText}>LOGIN</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.registerContainer}>
         <Text>Don't have an account?</Text>
@@ -88,6 +116,16 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 50,
     width: 322,
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -15,
+    marginBottom: 8,
   },
   buttonlogin: {
     borderColor: 'white',
