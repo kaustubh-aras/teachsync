@@ -7,7 +7,7 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,6 +18,16 @@ const Login = () => {
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    // Reset Errors when the component is focused again
+    if (isFocused) {
+      setEmailError('');
+      setPasswordError('');
+    }
+  }, [isFocused]);
 
   const handleLogin = async () => {
     try {
@@ -34,9 +44,6 @@ const Login = () => {
         setPasswordError('Password is required');
         return;
       }
-
-      setEmail('');
-      setPassword('');
 
       navigation.navigate('MyTabs');
     } catch (error) {
@@ -61,6 +68,7 @@ const Login = () => {
           placeholder="Enter Email"
           onChangeText={text => setEmail(text)}
           value={inputEmail}
+          keyboardType="email-address"
         />
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
       </View>

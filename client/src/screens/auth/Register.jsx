@@ -8,12 +8,11 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 
 const Register = () => {
-  
   const [inputName, setName] = useState('');
   const [inputEmail, setInputEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,6 +22,18 @@ const Register = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    // Reset Errors when the component is focused again
+    if (isFocused) {
+      setName('');
+      setInputEmail('');
+      setPassword('');
+      setInputPhoneNumber('');
+    }
+  }, [isFocused]);
 
   const handleRegister = async () => {
     try {
@@ -80,10 +91,10 @@ const Register = () => {
         return;
       }
 
-      setName('');
-      setInputEmail('');
-      setPassword('');
-      setInputPhoneNumber('');
+      // setName('');
+      // setInputEmail('');
+      // setPassword('');
+      // setInputPhoneNumber('');
 
       navigation.navigate('MyTabs');
     } catch (error) {
