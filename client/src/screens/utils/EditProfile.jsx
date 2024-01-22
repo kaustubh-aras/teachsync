@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 15,
     fontWeight: '300',
+    fontFamily: 'Poppins-Medium',
   },
   input: {
     width: '100%',
@@ -86,19 +87,20 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     color: 'white',
     marginTop: 5,
+    paddingLeft: 10,
+    paddingBottom: 5,
+    fontFamily: 'Poppins-Light',
   },
   mainButtonContainer: {
     flex: 1,
-    // backgroundColor: 'green',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
   buttonContainer: {
-    backgroundColor: 'red',
+    justifyContent: 'center',
     alignItems: 'center',
     width: 300,
     height: 50,
-    justifyContent: 'center',
     borderRadius: 15,
     borderWidth: 1,
     borderColor: 'white',
@@ -106,8 +108,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   saveButtonText: {
-    alignItems: 'center',
+    textAlign: 'center',
     color: 'white',
+    fontFamily: 'Poppins-SemiBold',
   },
 });
 

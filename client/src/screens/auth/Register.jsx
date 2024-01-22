@@ -259,5 +259,6 @@ const styles = StyleSheet.create({
   loginText: {
     color: '#ADD8E6',
     marginLeft: 5,
+    fontFamily: 'Roboto'
   },
 });

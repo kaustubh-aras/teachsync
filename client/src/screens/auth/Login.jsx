@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import axios from 'axios';
+// import axios from 'axios';
 import {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
   registerText: {
     color: '#ADD8E6',
     marginLeft: 5,
+    fontFamily: 'Roboto',
   },
 });
 

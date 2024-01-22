@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '400',
     color: 'white',
+    fontFamily: 'Koulen-Regular',
   },
   editProfileButton: {
     margin: 25,
@@ -97,8 +98,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '400',
     justifyContent: 'center',
+    fontStyle: 'normal',
     alignItems: 'center',
     fontSize: 15,
+    fontFamily: 'Nunito-Light',
     color: 'white',
   },
   profileButton: {
@@ -120,6 +123,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     justifyContent: 'center',
     alignItems: 'center',
+    fontFamily: 'Koulen-Regular',
     fontSize: 20,
   },
   container2: {
@@ -142,8 +146,13 @@ const styles = StyleSheet.create({
   logOutButtonText: {
     textAlign: 'center',
     fontSize: 15,
+    fontFamily: 'Poppins-SemiBold',
+    fontStyle: 'normal',
     fontWeight: '600',
     color: 'white',
+    marginTop: 3,
+    marginRight: 2,
+    marginLeft: 5,
   },
   logOutIcon: {
     color: 'white',
