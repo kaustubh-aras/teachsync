@@ -1,19 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {StyleSheet, Text, View, Button} from 'react-native';
+import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Scheduler() {
+  const navigation = useNavigation();
+
+  const goToAddSchedule = () => {
+    navigation.navigate('AddSchedule');
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={{color:'white'}}>Scheduler</Text>
+    <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+      <Button title="AddSchedule" onPress={goToAddSchedule} />
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({});
