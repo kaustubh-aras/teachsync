@@ -18,6 +18,7 @@ import EditProfile from '../utils/EditProfile';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import AddSchedule from '../utils/AddSchedule';
 
 // Navigation Initialization
 const Stack = createNativeStackNavigator();
@@ -30,6 +31,7 @@ function MyTabs() {
         headerShown: false,
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'grey',
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
           backgroundColor: 'black',
         },
@@ -95,7 +97,12 @@ export default function Navigation() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="MyTabs" component={MyTabs} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen
+          options={{headerShown: true, headerTitle: 'EditProfile', headerStyle: { backgroundColor: 'white' }}}
+          name="EditProfile"
+          component={EditProfile}
+        />
+        <Stack.Screen name="AddSchedule" component={AddSchedule} />
       </Stack.Navigator>
     </NavigationContainer>
   );

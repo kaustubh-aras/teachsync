@@ -91,10 +91,10 @@ const Register = () => {
         return;
       }
 
-      // setName('');
-      // setInputEmail('');
-      // setPassword('');
-      // setInputPhoneNumber('');
+      setName('');
+      setInputEmail('');
+      setPassword('');
+      setInputPhoneNumber('');
 
       navigation.navigate('MyTabs');
     } catch (error) {
@@ -112,7 +112,9 @@ const Register = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled">
         <View style={styles.innerContainer}>
           <Image
             style={styles.logo}
@@ -259,6 +261,6 @@ const styles = StyleSheet.create({
   loginText: {
     color: '#ADD8E6',
     marginLeft: 5,
-    fontFamily: 'Roboto'
+    fontFamily: 'Roboto',
   },
 });

@@ -6,6 +6,8 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 // import axios from 'axios';
@@ -58,48 +60,52 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.logo} source={require('../../assets/logo.png')} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Image style={styles.logo} source={require('../../assets/logo.png')} />
 
-      <View>
-        <TextInput
-          autoCapitalize="none"
-          style={[styles.input, emailError && styles.errorInput]}
-          placeholder="Enter Email"
-          onChangeText={text => setEmail(text)}
-          value={inputEmail}
-          keyboardType="email-address"
-        />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-      </View>
+        <View>
+          <TextInput
+            autoCapitalize="none"
+            style={[styles.input, emailError && styles.errorInput]}
+            placeholder="Enter Email"
+            onChangeText={text => setEmail(text)}
+            value={inputEmail}
+            keyboardType="email-address"
+          />
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
+        </View>
 
-      <View>
-        <TextInput
-          autoCapitalize="none"
-          style={[styles.input, passwordError && styles.errorInput]}
-          placeholder="Enter password"
-          onChangeText={text => setPassword(text)}
-          value={password}
-          secureTextEntry={true}
-        />
-        {passwordError ? (
-          <Text style={styles.errorText}>{passwordError}</Text>
-        ) : null}
-      </View>
+        <View>
+          <TextInput
+            autoCapitalize="none"
+            style={[styles.input, passwordError && styles.errorInput]}
+            placeholder="Enter password"
+            onChangeText={text => setPassword(text)}
+            value={password}
+            secureTextEntry={true}
+          />
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
+        </View>
 
-      <View>
-        <TouchableOpacity style={styles.buttonlogin} onPress={handleLogin}>
-          <Text style={styles.buttonText}>LOGIN</Text>
-        </TouchableOpacity>
-      </View>
+        <View>
+          <TouchableOpacity style={styles.buttonlogin} onPress={handleLogin}>
+            <Text style={styles.buttonText}>LOGIN</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.registerContainer}>
-        <Text>Don't have an account?</Text>
-        <TouchableOpacity onPress={handleRegister}>
-          <Text style={[styles.registerText]}>Register</Text>
-        </TouchableOpacity>
+        <View style={styles.registerContainer}>
+          <Text>Don't have an account?</Text>
+          <TouchableOpacity onPress={handleRegister}>
+            <Text style={[styles.registerText]}>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
