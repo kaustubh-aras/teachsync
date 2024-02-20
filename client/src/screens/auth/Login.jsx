@@ -4,17 +4,19 @@ import {
   View,
   Image,
   TextInput,
-  Alert,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ToastAndroid,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-// import axios from 'axios';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AuthContext} from '../../../context/authContext';
 
 const Login = () => {
+  const [state, setState] = useContext(AuthContext);
   const [inputEmail, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -47,10 +49,18 @@ const Login = () => {
         return;
       }
 
-      navigation.navigate('MyTabs');
+      const userLoginData = {email: inputEmail, password: password};
+
+      const response = await axios.post('/login', userLoginData);
+
+      const responseData = response.data;
+      setState(responseData);
+      await AsyncStorage.setItem('@auth', JSON.stringify(responseData));
+      console.log('Login Data->', {inputEmail, password});
+      navigation.replace('MyTabs');
     } catch (error) {
       console.error('Error during login:', error);
-      Alert.alert('Error', 'An unexpected error occurred.');
+      ToastAndroid.show('Invalid Credentials', ToastAndroid.SHORT);
     }
   };
 
@@ -58,6 +68,16 @@ const Login = () => {
   const handleRegister = () => {
     navigation.navigate('Register');
   };
+
+  // To check local storage
+  const getLocalStorageData = async () => {
+    let data = await AsyncStorage.getItem('@auth');
+    console.log('Local Storage ->', data);
+  };
+
+  useEffect(() => {
+    getLocalStorageData();
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

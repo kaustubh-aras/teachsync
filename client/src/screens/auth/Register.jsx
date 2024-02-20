@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {useState, useEffect} from 'react';
@@ -82,22 +83,17 @@ const Register = () => {
         phone: inputPhoneNumber,
       };
 
-      const response = await axios.post(
-        'http://192.168.0.103:3000/api/v1/auth/register',
-        userData,
-      );
-      if (response.data.error) {
-        Alert.alert('Registration Failed', response.data.error);
-        return;
-      }
+      const response = await axios.post('/register', userData);
 
       setName('');
       setInputEmail('');
       setPassword('');
       setInputPhoneNumber('');
 
-      navigation.navigate('MyTabs');
+      ToastAndroid.show('Registration Done Successfully ', ToastAndroid.SHORT);
+      navigation.navigate('Login');
     } catch (error) {
+      Alert.alert('Registration Failed', response.data.error);
       console.log(error);
     }
   };
