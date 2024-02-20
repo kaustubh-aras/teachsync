@@ -1,27 +1,39 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import React, {useEffect, useContext} from 'react';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import LottieView from 'lottie-react-native';
+import {AuthContext} from '../../../context/authContext';
 
-const SplashScreen = ({ navigation }) => {
+const SplashScreen = ({navigation}) => {
+  const [state] = useContext(AuthContext);
+  const authenticatedUser = state?.user && state?.token;
+
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('Login');
-    }, 3000);
-  }, [navigation]);
+    const navigateToScreen = () => {
+      if (authenticatedUser) {
+        navigation.replace('MyTabs');
+      } else {
+        navigation.replace('Login');
+      }
+    };
+
+    const timeoutId = setTimeout(navigateToScreen, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, [navigation, authenticatedUser]);
 
   return (
     <View style={styles.container}>
       <LottieView
         source={require('../../assets/splashscreen.json')}
         autoPlay
-        loop={true}
+        loop={false}
         style={styles.animation}
       />
     </View>
   );
 };
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -31,8 +43,8 @@ const styles = StyleSheet.create({
   },
   animation: {
     backgroundColor: 'black',
-    width: width, 
-    height: height, 
+    width: width,
+    height: height,
   },
 });
 

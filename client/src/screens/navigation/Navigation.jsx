@@ -1,7 +1,7 @@
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, {useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {AuthContext} from '../../../context/authContext';
 
 // Screens
 import Home from '../tabs/Home';
@@ -13,12 +13,12 @@ import DailyReport from '../tabs/DailyReport';
 import MonthlyReport from '../tabs/MonthlyReport';
 import Profile from '../tabs/Profile';
 import EditProfile from '../utils/EditProfile';
+import AddSchedule from '../utils/AddSchedule';
 
 //Icons
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import AddSchedule from '../utils/AddSchedule';
 
 // Navigation Initialization
 const Stack = createNativeStackNavigator();
@@ -88,22 +88,34 @@ function MyTabs() {
 }
 
 export default function Navigation() {
+  const [state] = useContext(AuthContext);
+  const authenticatedUser = state?.user && state?.token;
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="SplashScreen"
-        screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="MyTabs" component={MyTabs} />
-        <Stack.Screen
-          options={{headerShown: true, headerTitle: 'EditProfile', headerStyle: { backgroundColor: 'white' }}}
-          name="EditProfile"
-          component={EditProfile}
-        />
-        <Stack.Screen name="AddSchedule" component={AddSchedule} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      initialRouteName="SplashScreen"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="SplashScreen" component={SplashScreen} />
+      {authenticatedUser ? (
+        <>
+          <Stack.Screen name="MyTabs" component={MyTabs} />
+          <Stack.Screen
+            options={{
+              headerShown: true,
+              headerTitle: 'EditProfile',
+              headerStyle: {backgroundColor: 'white'},
+            }}
+            name="EditProfile"
+            component={EditProfile}
+          />
+          <Stack.Screen name="AddSchedule" component={AddSchedule} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </>
+      )}
+    </Stack.Navigator>
   );
 }
