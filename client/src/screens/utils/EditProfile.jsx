@@ -1,68 +1,119 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
+  Keyboard,
+  ScrollView,
+  ToastAndroid,
 } from 'react-native';
+import {AuthContext} from '../../../context/authContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const EditProfile = () => {
-  const [editname, setEditName] = useState('TeachSync');
-  const [editemail, setEditEmail] = useState('teachsync@gmail.com');
-  const [editphone, setEditPhone] = useState('12345678910');
-  const [editcourse, setEditCourse] = useState('BSC - IT');
+  const [state, setState] = useContext(AuthContext);
+  const [editname, setEditName] = useState(state?.user.name);
+  const [editemail] = useState(state?.user.email);
+  const [editpassword, setPassword] = useState(state?.user.password);
+  const [editphone, setEditPhone] = useState(state?.user.phone);
+
+  const handleSave = async () => {
+    try {
+      const {data} = await axios.put(
+        '/update',
+        {
+          name: editname,
+          email: editemail,
+          password: editpassword,
+          phone: editphone,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        },
+      );
+      let userData = JSON.stringify(data);
+      setState({...state, user: userData?.updatedUser});
+      ToastAndroid.show(
+        'User Profile Updated Successfully',
+        ToastAndroid.SHORT,
+      );
+    } catch (error) {
+      alert(error.response.data.message);
+      console.log(error);
+    }
+  };
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.container}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Name</Text>
-          <TextInput editable={false} value={editname} style={styles.input} />
-        </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.mainContainer}>
+          <View style={styles.container}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Name</Text>
+              <TextInput
+                value={editname}
+                onChangeText={text => setEditName(text)}
+                style={styles.input}
+              />
+            </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            value={editemail}
-            onChangeText={text => setEditEmail(text)}
-            style={styles.input}
-          />
-        </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                value={editemail}
+                style={styles.input}
+                editable={false}
+              />
+            </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Phone</Text>
-          <TextInput
-            value={editphone}
-            onChangeText={text => setEditPhone(text)}
-            style={styles.input}
-          />
-        </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                value={editpassword}
+                onChangeText={text => setPassword(text)}
+                style={styles.input}
+                secureTextEntry={true}
+              />
+            </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Course</Text>
-          <TextInput
-            value={editcourse}
-            onChangeText={text => setEditCourse(text)}
-            style={styles.input}
-          />
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Phone</Text>
+              <TextInput
+                value={editphone}
+                onChangeText={text => setEditPhone(text)}
+                style={styles.input}
+              />
+            </View>
+          </View>
+          <View style={styles.mainButtonContainer}>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={handleSave}>
+              <Text style={styles.saveButtonText}>SAVE</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      <View style={styles.mainButtonContainer}>
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text style={styles.saveButtonText}>SAVE</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
   mainContainer: {
-    flex: 1,
     backgroundColor: 'black',
     justifyContent: 'center',
-    backgroundColor: 'black',
   },
   container: {
     flex: 1,
