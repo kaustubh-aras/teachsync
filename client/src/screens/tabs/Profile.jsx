@@ -1,18 +1,36 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ToastAndroid,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useContext} from 'react';
+import {AuthContext} from '../../../context/authContext';
+import PushNotification from 'react-native-push-notification';
 
 export default function Profile() {
+  const [state, setState] = useContext(AuthContext);
   const navigation = useNavigation();
 
   function goToEditProfile() {
     navigation.navigate('EditProfile');
   }
 
-  function goToLogin() {
-    navigation.navigate('Login');
-  }
+  // Logout
+  const Logout = async () => {
+    // Cancels all Scheduled Notifications
+    PushNotification.cancelAllLocalNotifications();
+
+    setState({token: '', user: null});
+    await AsyncStorage.removeItem('@auth');
+    ToastAndroid.show('Logged Out Successfully', ToastAndroid.SHORT);
+    navigation.reset({index: 0, routes: [{name: 'Login'}]});
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
@@ -27,7 +45,7 @@ export default function Profile() {
             borderRadius: 85,
           }}
         />
-        <Text style={styles.userName}>Kaustubh Aras</Text>
+        <Text style={styles.userName}>{state?.user.name}</Text>
 
         <TouchableOpacity
           style={styles.editProfileButton}
@@ -48,7 +66,7 @@ export default function Profile() {
         </TouchableOpacity>
       </View>
       <View style={styles.container2}>
-        <TouchableOpacity style={styles.logOutButton} onPress={goToLogin}>
+        <TouchableOpacity style={styles.logOutButton} onPress={Logout}>
           <View
             style={{
               flexDirection: 'row',
