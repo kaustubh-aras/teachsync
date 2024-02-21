@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +21,18 @@ export default function Profile() {
   function goToEditProfile() {
     navigation.navigate('EditProfile');
   }
+
+  const askToLogout = async () => {
+    Alert.alert('Logout', 'Confirm Logout?', [
+      {
+        text: 'Yes',
+        onPress: Logout,
+      },
+      {
+        text: 'No',
+      },
+    ]);
+  };
 
   // Logout
   const Logout = async () => {
@@ -66,7 +79,7 @@ export default function Profile() {
         </TouchableOpacity>
       </View>
       <View style={styles.container2}>
-        <TouchableOpacity style={styles.logOutButton} onPress={Logout}>
+        <TouchableOpacity style={styles.logOutButton} onPress={askToLogout}>
           <View
             style={{
               flexDirection: 'row',
