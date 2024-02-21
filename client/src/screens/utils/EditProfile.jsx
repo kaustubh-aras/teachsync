@@ -11,7 +11,6 @@ import {
   ToastAndroid,
 } from 'react-native';
 import {AuthContext} from '../../../context/authContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const EditProfile = () => {
