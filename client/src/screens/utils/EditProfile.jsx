@@ -9,6 +9,7 @@ import {
   Keyboard,
   ScrollView,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import {AuthContext} from '../../../context/authContext';
 import axios from 'axios';
@@ -19,6 +20,19 @@ const EditProfile = () => {
   const [editemail] = useState(state?.user.email);
   const [editpassword, setPassword] = useState(state?.user.password);
   const [editphone, setEditPhone] = useState(state?.user.phone);
+
+  const confirmToSave = () => {
+    Alert.alert('Confirmation', 'Are you sure you want to save?', [
+      {
+        text: 'Yes',
+        onPress: handleSave,
+      },
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+    ]);
+  };
 
   const handleSave = async () => {
     try {
@@ -93,7 +107,7 @@ const EditProfile = () => {
           <View style={styles.mainButtonContainer}>
             <TouchableOpacity
               style={styles.buttonContainer}
-              onPress={handleSave}>
+              onPress={confirmToSave}>
               <Text style={styles.saveButtonText}>SAVE</Text>
             </TouchableOpacity>
           </View>

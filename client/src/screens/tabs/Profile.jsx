@@ -25,11 +25,11 @@ export default function Profile() {
   const askToLogout = async () => {
     Alert.alert('Logout', 'Confirm Logout?', [
       {
-        text: 'Yes',
-        onPress: Logout,
+        text: 'No',
       },
       {
-        text: 'No',
+        text: 'Yes',
+        onPress: Logout,
       },
     ]);
   };

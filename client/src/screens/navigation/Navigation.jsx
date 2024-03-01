@@ -55,10 +55,12 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="DailyReport"
+        name="Daily Report"
         component={DailyReport}
         options={{
-          tabBarLabel: 'Daily Report',
+          headerShown: true,
+          headerTitle: 'Daily Report',
+          headerStyle: {backgroundColor: 'white'},
           tabBarIcon: ({color, size}) => (
             <Entypo name="text-document" color={color} size={size} />
           ),
@@ -102,7 +104,7 @@ export default function Navigation() {
           <Stack.Screen
             options={{
               headerShown: true,
-              headerTitle: 'EditProfile',
+              headerTitle: 'Edit Profile',
               headerStyle: {backgroundColor: 'white'},
             }}
             name="EditProfile"

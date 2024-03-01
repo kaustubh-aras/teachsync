@@ -1,3 +1,4 @@
+// 'https://teachsync-testing-server.onrender.com/api';
 import React, {createContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -13,7 +14,7 @@ const AuthProvider = ({children}) => {
   });
 
   // Default Axios Settings
-  axios.defaults.baseURL = 'https://teachsync-testing-server.onrender.com/api';
+  axios.defaults.baseURL = 'http://192.168.0.104:3000/api';
 
   // initial local storage data
   useEffect(() => {
