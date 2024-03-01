@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema(
     profilePicture: {
       type: String,
     },
+    dailyReports: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "DailyReport" },
+    ],
   },
   { timestamps: true }
 );
