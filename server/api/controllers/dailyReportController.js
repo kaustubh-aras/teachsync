@@ -2,12 +2,8 @@ const { User } = require("../models/userDetails");
 const { DailyReport } = require("../models/userDailyReport");
 
 const dailyReportsController = async (req, res) => {
+  const { userId } = req.params;
   try {
-    const userId = req.params.userId;
-
-    console.log("userId:", userId);
-    console.log("req.body:", req.body);
-
     const user = await User.findById(userId);
 
     if (!user) {
@@ -20,10 +16,11 @@ const dailyReportsController = async (req, res) => {
     });
 
     // Save the new daily report to the database
-    const savedDailyReport = await newDailyReport.save();
-
+    const savedReport = await newDailyReport.save();
+    user.dailyReports.push(savedReport._id);
+    await user.save();
     // Respond with the saved daily report
-    res.status(201).json(savedDailyReport);
+    res.status(201).json(savedReport);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

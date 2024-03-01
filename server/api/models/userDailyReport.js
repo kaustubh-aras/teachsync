@@ -12,10 +12,6 @@ const dailyReportSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    date: {
-      type: Date,
-      required: true,
-    },
     lectures: {
       type: Number,
       required: true,
