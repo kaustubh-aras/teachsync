@@ -6,6 +6,7 @@ import {AuthContext} from '../../../context/authContext';
 // Screens
 import Home from '../tabs/Home';
 import Login from '../auth/Login';
+import ForgotPassword from '../auth/ForgotPassword';
 import SplashScreen from '../utils/SplashScreen';
 import Register from '../auth/Register';
 import Scheduler from '../tabs/Scheduler';
@@ -116,6 +117,7 @@ export default function Navigation() {
         <>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         </>
       )}
     </Stack.Navigator>
