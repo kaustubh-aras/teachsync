@@ -10,7 +10,13 @@ export default function Scheduler() {
   };
 
   return (
-    <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        backgroundColor: 'black',
+      }}>
       <Button title="AddSchedule" onPress={goToAddSchedule} />
     </View>
   );

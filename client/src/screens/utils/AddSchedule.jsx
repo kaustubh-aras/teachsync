@@ -13,11 +13,14 @@ import React, {useState, useEffect} from 'react';
 import DatePicker from 'react-native-date-picker';
 import PushNotification from 'react-native-push-notification';
 import {request, PERMISSIONS} from 'react-native-permissions';
+import {useNavigation} from '@react-navigation/native';
 
 export default function AddSchedule() {
   const [addtask, editAddTask] = useState('');
   const [adddescription, setAddDescription] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const navigation = useNavigation(); // Move the hook here
 
   useEffect(() => {
     checkAndRequestPermissions();
@@ -80,6 +83,7 @@ export default function AddSchedule() {
     });
 
     ToastAndroid.show('Notification Scheduled', ToastAndroid.SHORT);
+    navigation.navigate('Scheduler');
   };
 
   return (
