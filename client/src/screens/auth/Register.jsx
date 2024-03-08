@@ -8,10 +8,11 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   ToastAndroid,
-  Alert
+  Alert,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {useState, useEffect} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 
 const Register = () => {
@@ -26,6 +27,11 @@ const Register = () => {
   const [phoneError, setPhoneError] = useState('');
 
   const isFocused = useIsFocused();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   useEffect(() => {
     // Reset Errors when the component is focused again
@@ -153,8 +159,17 @@ const Register = () => {
               placeholder="Password"
               onChangeText={text => setPassword(text)}
               value={password}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
             />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={togglePasswordVisibility}>
+              <Icon
+                name={showPassword ? 'eye' : 'eye-slash'}
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
             {passwordError ? (
               <Text style={styles.errorText}>{passwordError}</Text>
             ) : null}
@@ -259,5 +274,11 @@ const styles = StyleSheet.create({
     color: '#ADD8E6',
     marginLeft: 5,
     fontFamily: 'Roboto',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    zIndex: 1,
   },
 });

@@ -14,6 +14,7 @@ import {useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../../../context/authContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Login = () => {
   const [state, setState] = useContext(AuthContext);
@@ -24,6 +25,11 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
 
   const isFocused = useIsFocused();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   useEffect(() => {
     // Reset Errors when the component is focused again
@@ -105,8 +111,17 @@ const Login = () => {
             placeholder="Enter password"
             onChangeText={text => setPassword(text)}
             value={password}
-            secureTextEntry={true}
+            secureTextEntry={!showPassword}
           />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={togglePasswordVisibility}>
+            <Icon
+              name={showPassword ? 'eye' : 'eye-slash'}
+              size={20}
+              color="white"
+            />
+          </TouchableOpacity>
           {passwordError ? (
             <Text style={styles.errorText}>{passwordError}</Text>
           ) : null}
@@ -187,6 +202,12 @@ const styles = StyleSheet.create({
     color: '#ADD8E6',
     marginLeft: 5,
     fontFamily: 'Roboto',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    zIndex: 1,
   },
 });
 
