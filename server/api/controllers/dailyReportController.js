@@ -27,4 +27,30 @@ const dailyReportsController = async (req, res) => {
   }
 };
 
-module.exports = dailyReportsController;
+const getDailyReportsController = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Fetch daily reports for the user
+    const dailyReports = await DailyReport.find({ user: userId });
+
+    // Calculate total sum of lectures
+    const totalLectures = dailyReports.reduce(
+      (sum, report) => sum + report.lectures,
+      0
+    );
+
+    // Respond with the fetched daily reports
+    res.status(200).json({ dailyReports, totalLectures });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { dailyReportsController, getDailyReportsController };
