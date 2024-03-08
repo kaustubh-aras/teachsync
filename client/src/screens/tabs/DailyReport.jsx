@@ -7,27 +7,30 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useContext} from 'react';
 import axios from 'axios';
 import {AuthContext} from '../../../context/authContext';
+import DatePicker from 'react-native-date-picker';
+import {Picker} from '@react-native-picker/picker';
 
 export default function DailyReport() {
-  const [serialNumber, setSerialNumber] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
   const [division, setDivision] = useState('');
   const [lecture, setLecture] = useState('');
-  const [course, setCourse] = useState('');
   const [subject, setSubject] = useState('');
   const [topic, setTopic] = useState('');
 
   const [authState] = useContext(AuthContext);
   const {user, token} = authState;
 
+  const [selectedCourse, setSelectedCourse] = useState();
+
   const saveDailyReport = async () => {
     try {
-      if (
-        !(serialNumber && division && lecture && course && subject && topic)
-      ) {
+      if (!(division && lecture && selectedCourse && subject && topic)) {
         Alert.alert('Empty Field', 'Please fill in all the fields.');
         return;
       }
@@ -35,11 +38,11 @@ export default function DailyReport() {
       const response = await axios.post(
         `/users/${user._id}/daily-reports`,
         {
-          serialNumber: parseInt(serialNumber),
+          date: date,
           lectures: parseInt(lecture),
           subject,
           topics: topic,
-          course,
+          course: selectedCourse,
           division,
         },
 
@@ -54,30 +57,32 @@ export default function DailyReport() {
       Alert.alert('Saved', 'Done');
     } catch (error) {
       console.error('Error saving daily report', error);
-
-      if (error.response && error.response.status === 500) {
-        Alert.alert(
-          'Duplicate Serial Number',
-          'Please pick a unique Serial Number',
-        );
-      } else {
-        console.error('Unhandled error:', error);
-      }
+      Alert.alert('Error', 'Please Try Again');
     }
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <View>
           <Text style={styles.labelText}>ADD DAILY REPORT</Text>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Sr. No</Text>
-          <TextInput
-            value={serialNumber}
-            onChangeText={text => setSerialNumber(text)}
-            style={[styles.input, {color: 'white'}]}
+          <Text style={styles.label}>Date</Text>
+          <TouchableOpacity style={styles.input} onPress={() => setOpen(true)}>
+            <Text style={styles.label}>{date.toDateString()}</Text>
+          </TouchableOpacity>
+          <DatePicker
+            modal
+            open={open}
+            date={date}
+            onConfirm={selectedDate => {
+              setOpen(false);
+              setDate(selectedDate);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
           />
           <Text style={styles.label}>Division</Text>
           <TextInput
@@ -92,11 +97,22 @@ export default function DailyReport() {
             style={styles.input}
           />
           <Text style={styles.label}>Course</Text>
-          <TextInput
-            value={course}
-            onChangeText={text => setCourse(text)}
-            style={styles.input}
-          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              style={styles.picker}
+              selectedValue={selectedCourse}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedCourse(itemValue)
+              }>
+              <Picker label="Select a Course" value="" />
+              <Picker.Item label="TYIT" value="TYIT" />
+              <Picker.Item label="TYCS" value="TYCS" />
+              <Picker.Item label="SYIT" value="SYIT" />
+              <Picker.Item label="SYCS" value="SYCS" />
+              <Picker.Item label="FYIT" value="FYIT" />
+              <Picker.Item label="FYCS" value="FYCS" />
+            </Picker>
+          </View>
           <Text style={styles.label}>Subject</Text>
           <TextInput
             value={subject}
@@ -117,17 +133,18 @@ export default function DailyReport() {
             <Text style={styles.saveButtonText}>SAVE</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 20,
   },
   label: {
     color: 'white',
@@ -174,5 +191,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontFamily: 'Poppins-SemiBold',
+  },
+  pickerContainer: {
+    width: 300,
+    height: 40,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'white',
+    overflow: 'hidden',
+  },
+  picker: {
+    width: '100%',
+    height: '100%',
+    color: 'white',
+    marginTop: -7,
+    marginLeft: -7,
   },
 });
