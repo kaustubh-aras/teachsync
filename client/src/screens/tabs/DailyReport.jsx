@@ -120,6 +120,7 @@ export default function DailyReport() {
             value={lecture}
             onChangeText={text => setLecture(text)}
             style={styles.input}
+            keyboardType="number-pad"
             placeholder="Total no. of lectures"
           />
           <Text style={styles.label}>Course</Text>
@@ -130,7 +131,7 @@ export default function DailyReport() {
               onValueChange={(itemValue, itemIndex) =>
                 setSelectedCourse(itemValue)
               }>
-              <Picker label="Select a Course" value="" />
+              <Picker label="Select Course" value="" style={{color: '#A9A9A9'}}/>
               <Picker.Item label="TYIT" value="TYIT" />
               <Picker.Item label="TYCS" value="TYCS" />
               <Picker.Item label="SYIT" value="SYIT" />
@@ -194,8 +195,7 @@ const styles = StyleSheet.create({
     height: height * 0.05,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'white',
-    color: 'white',
+    backgroundColor: '#1E1E1E',
     padding: 10,
     marginBottom: height * 0.02,
   },
@@ -224,14 +224,14 @@ const styles = StyleSheet.create({
     height: height * 0.05,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'white',
+    width: width * 0.9,
     overflow: 'hidden',
     marginBottom: height * 0.02,
   },
   picker: {
-    width: '100%',
+    width: 200,
     height: '100%',
-    color: 'white',
+    backgroundColor: '#1E1E1E',
     marginTop: -7,
     marginLeft: -7,
   },
