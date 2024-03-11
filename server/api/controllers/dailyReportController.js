@@ -31,13 +31,20 @@ const getDailyReportsController = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
+    const { course } = req.query;
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Query based on the presense of the course parameters
+    const query = { user: userId };
+    if (course) {
+      query.course = course;
+    }
+
     // Fetch daily reports for the user
-    const dailyReports = await DailyReport.find({ user: userId });
+    const dailyReports = await DailyReport.find(query);
 
     // Calculate total sum of lectures
     const totalLectures = dailyReports.reduce(

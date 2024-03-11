@@ -2,6 +2,9 @@ const JWT = require("jsonwebtoken");
 const { hashPassword, comparePassword } = require("../utils/authHelper");
 const { User } = require("../models/userDetails");
 const shortid = require("shortid"); // Import shortid for generating unique IDs
+const nodemailer = require("nodemailer");
+const { Schema } = require("mongoose");
+require("dotenv").config();
 
 // Controller for handling user registration
 const registerController = async (req, res) => {
@@ -172,6 +175,34 @@ const updateProfileController = async (req, res) => {
       success: true,
       message: "Error in Profile Update API",
     });
+  }
+};
+
+const forgotPassword = async (req, res) => {
+  try {
+    const email = req.body.email;
+
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      console.error({
+        success: false,
+        message: "There was an Error",
+      });
+      return res.send({
+        success: false,
+        message: "If user exists, an email was sent",
+      });
+    }
+
+    const token = await generateCode(5);
+    existingUser.resettoken = token;
+    existingUser.resettokenExpiration = Date.now() + 3600000;
+    await existingUser.save();
+    await sendEmail(email, `Here is your Reset Token ${token}`);
+    return res.send({ success: true, message: "Email sent" });
+  } catch (error) {
+    console.error(error);
   }
 };
 

@@ -1,3 +1,4 @@
+import React, { useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,13 +7,15 @@ import {
   Image,
   ToastAndroid,
   Alert,
+  Dimensions,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import React, {useContext} from 'react';
-import {AuthContext} from '../../../context/authContext';
+import { useNavigation } from '@react-navigation/native';
 import PushNotification from 'react-native-push-notification';
+import {AuthContext} from '../../../context/authContext';
+
+const { width, height } = Dimensions.get('window');
 
 export default function Profile() {
   const [state, setState] = useContext(AuthContext);
@@ -39,30 +42,22 @@ export default function Profile() {
     // Cancels all Scheduled Notifications
     PushNotification.cancelAllLocalNotifications();
 
-    setState({token: '', user: null});
+    setState({ token: '', user: null });
     await AsyncStorage.removeItem('@auth');
     ToastAndroid.show('Logged Out Successfully', ToastAndroid.SHORT);
-    navigation.reset({index: 0, routes: [{name: 'Login'}]});
+    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
-      <View style={styles.container1}>
+    <View style={styles.container}>
+      <View style={styles.profileContainer}>
         <Image
           source={require('../../assets/profile.jpeg')}
-          style={{
-            justifyContent: 'center',
-            alignContent: 'center',
-            height: 100,
-            width: 100,
-            borderRadius: 85,
-          }}
+          style={styles.profileImage}
         />
         <Text style={styles.userName}>{state?.user.name}</Text>
 
-        <TouchableOpacity
-          style={styles.editProfileButton}
-          onPress={goToEditProfile}>
+        <TouchableOpacity style={styles.editProfileButton} onPress={goToEditProfile}>
           <Text style={styles.editProfileButtonText}>Edit Profile</Text>
         </TouchableOpacity>
 
@@ -78,112 +73,96 @@ export default function Profile() {
           <Text style={styles.profileButtonText}>FAQ</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.container2}>
-        <TouchableOpacity style={styles.logOutButton} onPress={askToLogout}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 5,
-            }}>
-            <Text style={styles.logOutButtonText}>LOGOUT</Text>
-            <MaterialIcons size={15} style={styles.logOutIcon} name="logout" />
-          </View>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.logOutButton} onPress={askToLogout}>
+        <View style={styles.logoutButtonContent}>
+          <Text style={styles.logOutButtonText}>LOGOUT</Text>
+          <MaterialIcons size={15} style={styles.logOutIcon} name="logout" />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container1: {
-    flex: 0,
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    justifyContent: 'space-between',
+    paddingVertical: height * 0.05,
+    paddingHorizontal: width * 0.05,
+  },
+  profileContainer: {
     alignItems: 'center',
-    marginTop: 65,
+  },
+  profileImage: {
+    height: width * 0.4,
+    width: width * 0.4,
+    borderRadius: width * 0.2,
   },
   userName: {
-    marginTop: 10,
-    fontSize: 25,
+    marginTop: height * 0.02,
+    fontSize: width * 0.07,
     fontWeight: '400',
     color: 'white',
     fontFamily: 'Koulen-Regular',
   },
   editProfileButton: {
-    margin: 25,
+    marginVertical: height * 0.03,
     borderColor: 'black',
     borderWidth: 1,
-    width: 94,
-    height: 40,
-    borderRadius: 10,
+    width: width * 0.5,
+    height: height * 0.06,
+    borderRadius: height * 0.03,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: 'white',
-    backgroundColor: 'black',
   },
   editProfileButtonText: {
-    width: 75,
-    height: 20,
+    fontSize: width * 0.04,
     color: 'black',
     textAlign: 'center',
     fontWeight: '400',
-    justifyContent: 'center',
-    fontStyle: 'normal',
-    alignItems: 'center',
-    fontSize: 15,
     fontFamily: 'Nunito-Light',
-    color: 'white',
   },
   profileButton: {
-    width: 233,
-    height: 63,
-    margin: 25,
+    width: width * 0.8,
+    height: height * 0.08,
+    marginVertical: height * 0.02,
     borderColor: 'black',
     borderWidth: 1,
-    borderRadius: 5,
-    borderColor: 'white',
+    borderRadius: height * 0.04,
     backgroundColor: 'black',
     justifyContent: 'center',
-    alignContent: 'center',
     alignItems: 'center',
   },
   profileButtonText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: '400',
-    justifyContent: 'center',
-    alignItems: 'center',
     fontFamily: 'Koulen-Regular',
-    fontSize: 20,
-  },
-  container2: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontSize: width * 0.05,
   },
   logOutButton: {
-    width: 300,
-    height: 50,
+    width: width * 0.8,
+    height: height * 0.08,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 15,
+    borderRadius: height * 0.04,
     borderWidth: 1,
-    flexDirection: 'row',
     backgroundColor: 'black',
     borderColor: 'white',
-    gap: 5,
+    alignSelf: 'center',
+  },
+  logoutButtonContent: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: width * 0.01,
   },
   logOutButtonText: {
-    textAlign: 'center',
-    fontSize: 15,
+    fontSize: width * 0.04,
     fontFamily: 'Poppins-SemiBold',
-    fontStyle: 'normal',
-    fontWeight: '600',
     color: 'white',
-    marginTop: 3,
-    marginRight: 2,
-    marginLeft: 5,
   },
   logOutIcon: {
     color: 'white',

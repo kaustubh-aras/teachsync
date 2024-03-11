@@ -16,6 +16,16 @@ import Profile from '../tabs/Profile';
 import EditProfile from '../utils/EditProfile';
 import AddSchedule from '../utils/AddSchedule';
 
+// Monthly Report Category Screens
+
+import AllMonthlyReport from '../monthlyReportCategory/AllMonthlyReports';
+import FYITMonthlyReport from '../monthlyReportCategory/FYITMonthlyReport';
+import FYCSMonthlyReport from '../monthlyReportCategory/FYCSMonthlyReport';
+import SYITMonthlyReport from '../monthlyReportCategory/SYITMonthlyReport';
+import SYCSMonthlyReport from '../monthlyReportCategory/SYCSMonthlyReport';
+import TYITMonthlyReport from '../monthlyReportCategory/TYITMonthlyReport';
+import TYCSMonthlyReport from '../monthlyReportCategory/TYCSMonthlyReport';
+
 //Icons
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -112,6 +122,31 @@ export default function Navigation() {
             component={EditProfile}
           />
           <Stack.Screen name="AddSchedule" component={AddSchedule} />
+          <Stack.Screen name="AllMonthlyReport" component={AllMonthlyReport} />
+          <Stack.Screen
+            name="FYITMonthlyReport"
+            component={FYITMonthlyReport}
+          />
+          <Stack.Screen
+            name="FYCSMonthlyReport"
+            component={FYCSMonthlyReport}
+          />
+          <Stack.Screen
+            name="SYITMonthlyReport"
+            component={SYITMonthlyReport}
+          />
+          <Stack.Screen
+            name="SYCSMonthlyReport"
+            component={SYCSMonthlyReport}
+          />
+          <Stack.Screen
+            name="TYITMonthlyReport"
+            component={TYITMonthlyReport}
+          />
+          <Stack.Screen
+            name="TYCSMonthlyReport"
+            component={TYCSMonthlyReport}
+          />
         </>
       ) : (
         <>

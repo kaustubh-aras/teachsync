@@ -21,5 +21,3 @@ export default function Scheduler() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

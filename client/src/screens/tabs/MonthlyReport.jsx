@@ -2,24 +2,29 @@ import React, {useEffect, useState, useContext} from 'react';
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
-  RefreshControl,
   TouchableOpacity,
-  Modal,
+  RefreshControl,
+  ScrollView,
 } from 'react-native';
 import axios from 'axios';
 import {AuthContext} from '../../../context/authContext';
+import {useNavigation} from '@react-navigation/native';
 
 export default function MonthlyReport() {
-  const [dailyReports, setDailyReports] = useState([]);
+  const navigation = useNavigation();
   const [totalLectures, setTotalLectures] = useState(0);
-  const [refreshing, setRefreshing] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
 
   const [authState] = useContext(AuthContext);
   const {user, token} = authState;
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (user && token) {
+      fetchDailyReport();
+    }
+  }, [user, token]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -31,35 +36,13 @@ export default function MonthlyReport() {
           'Content-Type': 'application/json',
         },
       });
-
-      const {
-        dailyReports: fetchedDailyReports,
-        totalLectures: fetchedTotalLectures,
-      } = response.data;
-
-      setDailyReports(fetchedDailyReports);
-      setTotalLectures(fetchedTotalLectures);
+      setTotalLectures(response.data.totalLectures);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setRefreshing(false);
     }
   };
-
-  const openModal = item => {
-    setSelectedItem(item);
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  useEffect(() => {
-    if (user && token) {
-      fetchDailyReport();
-    }
-  }, [user, token]);
 
   const fetchDailyReport = async () => {
     try {
@@ -69,89 +52,102 @@ export default function MonthlyReport() {
           'Content-Type': 'application/json',
         },
       });
-
-      const {
-        dailyReports: fetchedDailyReports,
-        totalLectures: fetchedTotalLectures,
-      } = response.data;
-
-      setDailyReports(fetchedDailyReports);
-      setTotalLectures(fetchedTotalLectures);
+      setTotalLectures(response.data.totalLectures);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  const renderDailyReportItem = ({item}) => (
-    <TouchableOpacity onPress={() => openModal(item)}>
-      <View style={styles.box}>
-        <Text>Date: {item.date}</Text>
-        <Text>Lectures: {item.lectures}</Text>
-        <Text>Division: {item.division}</Text>
-        <Text>Course: {item.course}</Text>
-        <Text>Subject: {item.subject}</Text>
-        <Text>Topic: {item.topics.join(', ')}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const goToAllMonthlyReport = () => {
+    navigation.navigate('AllMonthlyReport');
+  };
+  const goToFYIT = () => {
+    navigation.navigate('FYITMonthlyReport');
+  };
+  const goToFYCS = () => {
+    navigation.navigate('FYCSMonthlyReport');
+  };
+  const goToSYIT = () => {
+    navigation.navigate('SYITMonthlyReport');
+  };
+  const goToSYCS = () => {
+    navigation.navigate('SYCSMonthlyReport');
+  };
+  const goToTYIT = () => {
+    navigation.navigate('TYITMonthlyReport');
+  };
+  const goToTYCS = () => {
+    navigation.navigate('TYCSMonthlyReport');
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={{backgroundColor: 'black'}}>
-        Total Sum of Lectures: {totalLectures}
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+      <Text style={styles.totalLecturesText}>
+        Total Number of Lectures taken: {totalLectures}
       </Text>
 
-      <FlatList
-        data={dailyReports}
-        keyExtractor={item => item._id}
-        renderItem={renderDailyReportItem}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+      <TouchableOpacity style={styles.button} onPress={goToAllMonthlyReport}>
+        <Text style={styles.buttonText}>All Monthly Reports</Text>
+      </TouchableOpacity>
 
-      {/* Modal for displaying selected item */}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={closeModal}>
-        <View style={styles.modalContainer}>
-          <Text>Date: {selectedItem?.date}</Text>
-          <Text>Lectures: {selectedItem?.lectures}</Text>
-          <Text>Division: {selectedItem?.division}</Text>
-          <Text>Course: {selectedItem?.course}</Text>
-          <Text>Subject: {selectedItem?.subject}</Text>
-          <Text>Topic: {selectedItem?.topics.join(', ')}</Text>
+      <TouchableOpacity style={styles.button} onPress={goToFYIT}>
+        <Text style={styles.buttonText}>FYIT</Text>
+      </TouchableOpacity>
 
-          <TouchableOpacity onPress={closeModal}>
-            <Text style={{color: 'blue', marginTop: 10}}>Close Modal</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    </View>
+      <TouchableOpacity style={styles.button} onPress={goToFYCS}>
+        <Text style={styles.buttonText}>FYCS</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={goToSYIT}>
+        <Text style={styles.buttonText}>SYIT</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={goToSYCS}>
+        <Text style={styles.buttonText}>SYCS</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={goToTYIT}>
+        <Text style={styles.buttonText}>TYIT</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={goToTYCS}>
+        <Text style={styles.buttonText}>TYCS</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    flex: 1,
-  },
-  box: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: 'black',
-    padding: 10,
-    margin: 10,
-    height: 150,
-    backgroundColor: 'black',
-  },
-  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
-    padding: 20,
+    backgroundColor: '#000',
+  },
+  totalLecturesText: {
+    fontSize: 20,
+    marginBottom: 20,
+    color: '#fff',
+  },
+  button: {
+    backgroundColor: '#fff',
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 15,
+    padding: 15,
+    marginBottom: 10,
+    width: 300,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

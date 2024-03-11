@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import React, {useState, useContext} from 'react';
 import axios from 'axios';
@@ -15,18 +16,36 @@ import {AuthContext} from '../../../context/authContext';
 import DatePicker from 'react-native-date-picker';
 import {Picker} from '@react-native-picker/picker';
 
+const {width, height} = Dimensions.get('window');
+
 export default function DailyReport() {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [division, setDivision] = useState('');
   const [lecture, setLecture] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState();
   const [subject, setSubject] = useState('');
   const [topic, setTopic] = useState('');
 
   const [authState] = useContext(AuthContext);
   const {user, token} = authState;
 
-  const [selectedCourse, setSelectedCourse] = useState();
+  const confirmToSave = () => {
+    if (!(division && lecture && selectedCourse && subject && topic)) {
+      Alert.alert('Empty Field', 'Please fill in all the fields.');
+      return;
+    }
+    Alert.alert('Confirmation', 'Are you sure you want to save', [
+      {
+        text: 'Yes',
+        onPress: saveDailyReport,
+      },
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+    ]);
+  };
 
   const saveDailyReport = async () => {
     try {
@@ -45,7 +64,6 @@ export default function DailyReport() {
           course: selectedCourse,
           division,
         },
-
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,6 +73,13 @@ export default function DailyReport() {
       );
       console.log('Daily report saved', response.data);
       Alert.alert('Saved', 'Done');
+
+      // Clears Input Box After Clicking on Save
+      setDivision('');
+      setLecture('');
+      setSubject('');
+      setTopic('');
+      setSelectedCourse('');
     } catch (error) {
       console.error('Error saving daily report', error);
       Alert.alert('Error', 'Please Try Again');
@@ -62,7 +87,7 @@ export default function DailyReport() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView contentContainerStyle={styles.container}>
         <View>
           <Text style={styles.labelText}>ADD DAILY REPORT</Text>
@@ -95,6 +120,7 @@ export default function DailyReport() {
             value={lecture}
             onChangeText={text => setLecture(text)}
             style={styles.input}
+            placeholder="Total no. of lectures"
           />
           <Text style={styles.label}>Course</Text>
           <View style={styles.pickerContainer}>
@@ -129,7 +155,7 @@ export default function DailyReport() {
         <View style={styles.mainButtonContainer}>
           <TouchableOpacity
             style={styles.buttonContainer}
-            onPress={saveDailyReport}>
+            onPress={confirmToSave}>
             <Text style={styles.saveButtonText}>SAVE</Text>
           </TouchableOpacity>
         </View>
@@ -148,28 +174,30 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'white',
-    fontSize: 15,
+    fontSize: width * 0.04,
     fontWeight: '300',
     fontFamily: 'Poppins-Medium',
   },
   labelText: {
     color: 'white',
     fontFamily: 'Koulen-Regular',
-    fontSize: 25,
-    marginTop: 15,
+    fontSize: width * 0.06,
+    marginTop: height * 0.02,
   },
   inputContainer: {
     flex: 1,
     color: 'white',
+    width: width * 0.9,
   },
   input: {
-    width: 300,
-    height: 40,
+    width: '100%',
+    height: height * 0.05,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'white',
     color: 'white',
     padding: 10,
+    marginBottom: height * 0.02,
   },
   mainButtonContainer: {
     flex: 1,
@@ -179,13 +207,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 300,
-    height: 50,
+    width: width * 0.9,
+    height: height * 0.07,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: 'white',
-    marginHorizontal: 30,
-    marginBottom: 20,
+    marginVertical: height * 0.02,
   },
   saveButtonText: {
     textAlign: 'center',
@@ -193,12 +220,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
   },
   pickerContainer: {
-    width: 300,
-    height: 40,
+    width: '100%',
+    height: height * 0.05,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'white',
     overflow: 'hidden',
+    marginBottom: height * 0.02,
   },
   picker: {
     width: '100%',

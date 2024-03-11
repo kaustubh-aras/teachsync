@@ -7,9 +7,8 @@ const dailyReportSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    serialNumber: {
-      type: Number,
-      unique: true,
+    date: {
+      type: String,
       required: true,
     },
     lectures: {
@@ -35,6 +34,9 @@ const dailyReportSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Add an index on the user field
+dailyReportSchema.index({ user: 1 });
 
 const DailyReport = mongoose.model("DailyReport", dailyReportSchema);
 
