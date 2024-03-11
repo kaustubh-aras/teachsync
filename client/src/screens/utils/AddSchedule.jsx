@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Alert,
   ToastAndroid,
+  Dimensions,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import DatePicker from 'react-native-date-picker';
@@ -15,17 +17,19 @@ import PushNotification from 'react-native-push-notification';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {useNavigation} from '@react-navigation/native';
 
+const {width, height} = Dimensions.get('window');
+
 export default function AddSchedule() {
   const [addtask, editAddTask] = useState('');
   const [adddescription, setAddDescription] = useState('');
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
-  const navigation = useNavigation(); // Move the hook here
+  const navigation = useNavigation();
 
   useEffect(() => {
     checkAndRequestPermissions();
 
-    // Check if the platform is Android before configuring channels
     if (Platform.OS === 'android') {
       configureChannels();
     }
@@ -50,40 +54,41 @@ export default function AddSchedule() {
 
   const configureChannels = () => {
     PushNotification.createChannel({
-      channelId: 'channel-id', // Change this to a unique ID
+      channelId: 'channel-id',
       channelName: 'Scheduled Notifications',
       channelDescription: 'Channel for scheduled notifications',
       soundName: 'default',
-      importance: 4, // High importance (5 is maximum, 1 is minimum)
+      importance: 4,
       vibrate: true,
     });
   };
 
   const scheduleNotification = () => {
-    // Checks for Empty Inputs and Alerts the user
     if (!addtask || !adddescription) {
       Alert.alert('Empty Fields', 'Please enter both Title and Message');
-      return; // Stop execution if either title or message is empty
+      return;
     }
 
-    // Set the notification date to the selected date
-    const notificationDate = new Date(selectedDate);
+    const notificationDate = new Date(date);
 
     if (notificationDate <= new Date()) {
       Alert.alert('Invalid Date', 'Please select a future date and time');
-      return; // Stop execution if the date is in the past
+      return;
     }
 
-    // Schedule the notification with the specified channel ID
     PushNotification.localNotificationSchedule({
       title: addtask,
       message: adddescription,
       date: notificationDate,
-      channelId: 'channel-id', // Use the same channel ID as configured
+      channelId: 'channel-id',
     });
 
     ToastAndroid.show('Notification Scheduled', ToastAndroid.SHORT);
     navigation.navigate('Scheduler');
+
+    editAddTask('');
+    setAddDescription('');
+    setDate('');
   };
 
   return (
@@ -94,78 +99,62 @@ export default function AddSchedule() {
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag">
-        <View style={styles.mainContainer}>
-          <View style={styles.container}>
-            <Text style={styles.scheduleText}>Add Schedule</Text>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Title</Text>
-              <TextInput
-                value={addtask}
-                onChangeText={text => editAddTask(text)}
-                style={styles.input}
-                multiline={true}
-              />
-            </View>
+        <View style={styles.container}>
+          <Text style={styles.scheduleText}>Add Schedule</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Title</Text>
+            <TextInput
+              value={addtask}
+              onChangeText={text => editAddTask(text)}
+              style={styles.input}
+              multiline={true}
+            />
+          </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Message</Text>
-              <TextInput
-                value={adddescription}
-                style={styles.inputDescription}
-                onChangeText={text => setAddDescription(text)}
-                textAlignVertical="top"
-              />
-            </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Message</Text>
+            <TextInput
+              value={adddescription}
+              style={styles.inputDescription}
+              onChangeText={text => setAddDescription(text)}
+              textAlignVertical="top"
+            />
+          </View>
 
-            <View
-              style={{
-                flex: 1,
-                marginTop: 30,
-                borderColor: 'white',
-                backgroundColor: 'black',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 5,
-                borderWidth: 1,
-              }}>
-              <DatePicker
-                androidVariant="nativeAndroid"
-                textColor="white"
-                style={{
-                  width: 300,
-                  height: 150,
-                  backgroundColor: 'black',
-                  flex: 1,
-                  marginTop: 20,
-                }}
-                date={selectedDate}
-                mode="datetime"
-                placeholder="Select Date and Time"
-                format="YYYY-MM-DD HH:mm"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    marginLeft: 36,
-                  },
-                }}
-                onDateChange={date => setSelectedDate(new Date(date))}
-              />
-            </View>
+          <Text style={styles.label}>Date</Text>
+          <TouchableOpacity style={styles.input} onPress={() => setOpen(true)}>
+            <Text style={styles.label}>
+              {`${String(date.getDate()).padStart(2, '0')}-${String(
+                date.getMonth() + 1,
+              ).padStart(
+                2,
+                '0',
+              )}-${date.getFullYear()} ${date.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}`}
+            </Text>
+          </TouchableOpacity>
 
-            <View style={styles.mainButtonContainer}>
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={scheduleNotification}>
-                <Text style={styles.scheduleButton}>SCHEDULE</Text>
-              </TouchableOpacity>
-            </View>
+          <DatePicker
+            modal
+            open={open}
+            date={date}
+            onConfirm={selectedDate => {
+              setOpen(false);
+              setDate(selectedDate);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
+
+          <View style={styles.mainButtonContainer}>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={scheduleNotification}>
+              <Text style={styles.scheduleButton}>SCHEDULE</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -182,7 +171,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    paddingHorizontal: 20,
+    paddingHorizontal: '5%',
     justifyContent: 'center',
   },
   scrollContainer: {
@@ -190,47 +179,64 @@ const styles = StyleSheet.create({
   },
   scheduleText: {
     width: '100%',
-    height: 50,
+    height: height * 0.1,
     textAlign: 'center',
     fontFamily: 'Koulen-Regular',
     color: 'white',
-    fontSize: 25,
+    fontSize: width * 0.06,
     fontStyle: 'normal',
     fontWeight: '400',
-    marginTop: 30,
+    marginTop: height * 0.05,
   },
   inputContainer: {
-    marginTop: 25,
+    marginTop: height * 0.02,
   },
   label: {
     color: 'white',
-    fontSize: 15,
+    fontSize: width * 0.04,
     fontWeight: '300',
     fontFamily: 'Poppins-Medium',
   },
   input: {
     width: '100%',
-    height: 40,
-    borderRadius: 5,
+    height: height * 0.05,
+    borderRadius: width * 0.02,
     borderWidth: 1,
     borderColor: 'white',
     color: 'white',
-    marginTop: 5,
-    paddingLeft: 10,
-    paddingBottom: 5,
+    marginTop: height * 0.01,
+    paddingLeft: '3%',
+    paddingBottom: '1%',
+    paddingTop: '2%',
     fontFamily: 'Poppins-Regular',
   },
   inputDescription: {
     width: '100%',
-    height: 180,
-    borderRadius: 5,
+    height: height * 0.15,
+    borderRadius: width * 0.02,
     borderWidth: 1,
     borderColor: 'white',
     color: 'white',
-    marginTop: 5,
-    paddingLeft: 10,
-    paddingBottom: 5,
+    marginTop: height * 0.01,
+    paddingLeft: '2%',
+    paddingBottom: '1%',
     fontFamily: 'Poppins-Regular',
+  },
+  datePickerContainer: {
+    flex: 1,
+    marginTop: height * 0.03,
+    borderColor: 'white',
+    backgroundColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: width * 0.02,
+    borderWidth: 1,
+  },
+  datePicker: {
+    width: width * 0.8,
+    height: height * 0.2,
+    backgroundColor: 'black',
+    marginTop: height * 0.02,
   },
   mainButtonContainer: {
     flex: 1,
@@ -238,15 +244,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainer: {
-    width: 300,
-    height: 50,
+    width: width * 0.6,
+    height: height * 0.07,
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: 'white',
-    borderRadius: 15,
+    borderRadius: width * 0.04,
     borderWidth: 1,
-    marginHorizontal: 30,
-    marginBottom: 20,
+    marginHorizontal: width * 0.1,
+    marginBottom: height * 0.05,
   },
   scheduleButton: {
     textAlign: 'center',
