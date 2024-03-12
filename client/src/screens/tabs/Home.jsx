@@ -1,110 +1,76 @@
-import {StyleSheet, Text, View} from 'react-native';
-import {useContext} from 'react';
-import {AuthContext} from '../../../context/authContext';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function Home() {
-  const [state] = useContext(AuthContext);
-
+const Home = () => {
   return (
     <View style={styles.container}>
-      <Text style={{color: 'white'}}>Home</Text>
-      <Text>{JSON.stringify(state, null, 4)}</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Teacher's Home</Text>
+      </View>
+
+      <View style={styles.statsContainer}>
+        <View style={styles.statBox}>
+          <Text style={styles.statLabel}>Tasks Completed</Text>
+          <Text style={styles.statValue}>15</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statLabel}>Pending Tasks</Text>
+          <Text style={styles.statValue}>5</Text>
+        </View>
+      </View>
+
+      <TouchableOpacity style={styles.addButton}>
+        <Text style={styles.addButtonLabel}>Add Task</Text>
+      </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
     backgroundColor: 'black',
+  },
+  header: {
     alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  statBox: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: 'black',
+    borderRadius: 8,
+    marginHorizontal: 10,
+  },
+  statLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  statValue: {
+    fontSize: 18,
+    color: '#3498db',
+  },
+  addButton: {
+    backgroundColor: '#3498db',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  addButtonLabel: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
-// Import necessary React Native components
 
-// import React from 'react';
-// import { View, StyleSheet } from 'react-native';
-// import { Title, Card, Button, Avatar } from 'react-native-paper';
-
-// const Home = () => {
-//   return (
-//     <View style={styles.container}>
-//       <Title style={styles.title}>Home Dashboard</Title>
-
-//       {/* Cards for different sections */}
-//       <View style={styles.cardContainer}>
-//         <Card style={styles.card}>
-//           <Card.Title title="Total Sales" />
-//           <Card.Content>
-//             <Title>$1,234</Title>
-//           </Card.Content>
-//           <Card.Actions>
-//             <Button>View Details</Button>
-//           </Card.Actions>
-//         </Card>
-
-//         <Card style={styles.card}>
-//           <Card.Title title="New Orders" />
-//           <Card.Content>
-//             <Title>45</Title>
-//           </Card.Content>
-//           <Card.Actions>
-//             <Button>View Details</Button>
-//           </Card.Actions>
-//         </Card>
-//       </View>
-
-//       {/* User profile */}
-//       <Card style={styles.userCard}>
-//         <Card.Title title="User Profile" />
-//         <Card.Content style={styles.userCardContent}>
-//           <Avatar.Image
-//             size={80}
-//             // source={require('./path-to-your-profile-image.jpg')}
-//           />
-//           <View style={styles.userInfo}>
-//             <Title>Your Name</Title>
-//             <Button>Edit Profile</Button>
-//           </View>
-//         </Card.Content>
-//       </Card>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 16,
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     marginBottom: 20,
-//   },
-//   cardContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: 20,
-//   },
-//   card: {
-//     flex: 1,
-//     marginHorizontal: 8,
-//   },
-//   userCard: {
-//     marginTop: 20,
-//   },
-//   userCardContent: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   userInfo: {
-//     marginLeft: 16,
-//     flex: 1,
-//   },
-// });
-
-// export default Home;
-
-
+export default Home;
