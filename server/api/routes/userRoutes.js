@@ -3,6 +3,8 @@ const {
   registerController,
   loginController,
   updateProfileController,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/userControllers.js");
 const {
   dailyReportsController,
@@ -21,18 +23,14 @@ router.post("/register", registerController);
 
 router.post("/login", loginController);
 
+router.post("/forgot-password", forgotPassword);
+
+router.post("/reset-password", resetPassword);
+
 router.put("/update", requiresSignIn, updateProfileController);
 
-router.post(
-  "/users/:userId/daily-reports",
-  requiresSignIn,
-  dailyReportsController
-);
+router.post("/users/:userId/daily-reports", requiresSignIn, dailyReportsController);
 
-router.get(
-  "/users/:userId/daily-reports",
-  requiresSignIn,
-  getDailyReportsController
-);
+router.get("/users/:userId/daily-reports", requiresSignIn, getDailyReportsController);
 
 module.exports = router;

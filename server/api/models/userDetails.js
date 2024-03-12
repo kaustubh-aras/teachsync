@@ -10,10 +10,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    resetToken: {
+    resetPasswordOTP: {
       type: String,
     },
-    resetTokenExpiration: {
+    resetPasswordExpires: {
       type: Date,
     },
     email: {
