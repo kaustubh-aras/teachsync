@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,7 @@ import {
   ScrollView,
   ToastAndroid,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {AuthContext} from '../../../context/authContext';
 import axios from 'axios';
@@ -117,6 +118,11 @@ const EditProfile = () => {
   );
 };
 
+const {width, height} = Dimensions.get('window');
+const guidelineBaseWidth = 375;
+
+const scale = size => (width / guidelineBaseWidth) * size;
+
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
@@ -125,34 +131,37 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   mainContainer: {
+    flex: 1,
     backgroundColor: 'black',
     justifyContent: 'center',
+    width: '100%',
   },
   container: {
     flex: 1,
     backgroundColor: 'black',
-    paddingHorizontal: 30,
+    paddingHorizontal: scale(30),
     justifyContent: 'center',
+    width: '100%',
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: scale(15),
   },
   label: {
     color: 'white',
-    fontSize: 15,
+    fontSize: scale(15),
     fontWeight: '300',
     fontFamily: 'Poppins-Medium',
   },
   input: {
     width: '100%',
-    height: 40,
-    borderRadius: 5,
-    borderWidth: 1,
+    height: scale(40),
+    borderRadius: scale(5),
+    borderWidth: scale(1),
     borderColor: 'white',
     color: 'white',
-    marginTop: 5,
-    paddingLeft: 10,
-    paddingBottom: 5,
+    marginTop: scale(5),
+    paddingLeft: scale(10),
+    paddingBottom: scale(5),
     fontFamily: 'Poppins-Light',
   },
   mainButtonContainer: {
@@ -163,13 +172,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 300,
-    height: 50,
-    borderRadius: 15,
-    borderWidth: 1,
+    width: scale(300),
+    height: scale(50),
+    borderRadius: scale(15),
+    borderWidth: scale(1),
     borderColor: 'white',
-    marginHorizontal: 30,
-    marginBottom: 20,
+    marginHorizontal: scale(30),
+    marginBottom: scale(20),
   },
   saveButtonText: {
     textAlign: 'center',

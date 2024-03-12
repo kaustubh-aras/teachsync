@@ -8,11 +8,16 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   ToastAndroid,
-  Alert
+  Alert,
+  Dimensions,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {useState, useEffect} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Register = () => {
   const [inputName, setName] = useState('');
@@ -26,6 +31,11 @@ const Register = () => {
   const [phoneError, setPhoneError] = useState('');
 
   const isFocused = useIsFocused();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   useEffect(() => {
     // Reset Errors when the component is focused again
@@ -153,8 +163,17 @@ const Register = () => {
               placeholder="Password"
               onChangeText={text => setPassword(text)}
               value={password}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
             />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={togglePasswordVisibility}>
+              <Icon
+                name={showPassword ? 'eye' : 'eye-slash'}
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
             {passwordError ? (
               <Text style={styles.errorText}>{passwordError}</Text>
             ) : null}
@@ -210,18 +229,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 150,
-    height: 113,
-    margin: 10,
+    width: windowWidth * 0.4,
+    height: windowHeight * 0.2,
+    margin: windowHeight * 0.02,
   },
   input: {
     borderColor: 'gray',
     backgroundColor: '#1E1E1E',
-    borderRadius: 15,
-    marginBottom: 20,
-    padding: 10,
-    height: 50,
-    width: 322,
+    borderRadius: windowWidth * 0.05,
+    marginBottom: windowHeight * 0.02,
+    padding: windowHeight * 0.015,
+    height: windowHeight * 0.06,
+    width: windowWidth * 0.8,
   },
   errorInput: {
     borderColor: 'red',
@@ -229,18 +248,18 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    fontSize: 12,
-    marginTop: -15,
-    marginBottom: 8,
+    fontSize: windowWidth * 0.035,
+    marginTop: windowHeight * -0.015,
+    marginBottom: windowHeight * 0.008,
   },
   buttonregister: {
     borderColor: 'white',
     borderWidth: 1,
     backgroundColor: 'white',
-    borderRadius: 15,
-    marginBottom: 20,
-    height: 50,
-    width: 322,
+    borderRadius: windowWidth * 0.05,
+    marginBottom: windowHeight * 0.02,
+    height: windowHeight * 0.06,
+    width: windowWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -248,7 +267,7 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     fontFamily: 'Poppins',
-    fontSize: 15,
+    fontSize: windowWidth * 0.04,
     fontStyle: 'normal',
     fontWeight: '700',
   },
@@ -257,7 +276,13 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: '#ADD8E6',
-    marginLeft: 5,
+    marginLeft: windowWidth * 0.01,
     fontFamily: 'Roboto',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    top: windowHeight * 0.015,
+    right: windowWidth * 0.05,
+    zIndex: 1,
   },
 });

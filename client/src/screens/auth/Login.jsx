@@ -8,12 +8,17 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ToastAndroid,
+  Dimensions,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../../../context/authContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Login = () => {
   const [state, setState] = useContext(AuthContext);
@@ -24,6 +29,11 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
 
   const isFocused = useIsFocused();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   useEffect(() => {
     // Reset Errors when the component is focused again
@@ -69,6 +79,10 @@ const Login = () => {
     navigation.navigate('Register');
   };
 
+  const goToForgotPassword = () => {
+    navigation.navigate('ResetPasswordRequestScreen');
+  };
+
   // To check local storage
   const getLocalStorageData = async () => {
     let data = await AsyncStorage.getItem('@auth');
@@ -105,8 +119,25 @@ const Login = () => {
             placeholder="Enter password"
             onChangeText={text => setPassword(text)}
             value={password}
-            secureTextEntry={true}
+            secureTextEntry={!showPassword}
           />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={togglePasswordVisibility}>
+            <Icon
+              name={showPassword ? 'eye' : 'eye-slash'}
+              size={20}
+              color="white"
+            />
+          </TouchableOpacity>
+
+          {/* "Forgot Password" text */}
+          <TouchableOpacity
+            style={styles.forgotPassword}
+            onPress={goToForgotPassword}>
+            <Text style={styles.registerText}>Forgot Password?</Text>
+          </TouchableOpacity>
+
           {passwordError ? (
             <Text style={styles.errorText}>{passwordError}</Text>
           ) : null}
@@ -132,24 +163,23 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: 100,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'black',
   },
   logo: {
-    width: 150,
-    height: 113,
-    margin: 10,
+    width: windowWidth * 0.4,
+    height: windowHeight * 0.2,
+    margin: windowHeight * 0.02,
   },
   input: {
     borderColor: 'gray',
     backgroundColor: '#1E1E1E',
-    borderRadius: 15,
-    marginBottom: 20,
-    padding: 10,
-    height: 50,
-    width: 322,
+    borderRadius: windowWidth * 0.05,
+    marginBottom: windowHeight * 0.02,
+    padding: windowHeight * 0.015,
+    height: windowHeight * 0.06,
+    width: windowWidth * 0.8,
   },
   errorInput: {
     borderColor: 'red',
@@ -157,18 +187,18 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    fontSize: 12,
-    marginTop: -15,
-    marginBottom: 8,
+    fontSize: windowWidth * 0.035,
+    marginTop: windowHeight * -0.015,
+    marginBottom: windowHeight * 0.008,
   },
   buttonlogin: {
     borderColor: 'white',
     borderWidth: 1,
     backgroundColor: 'white',
-    borderRadius: 15,
-    marginBottom: 20,
-    height: 50,
-    width: 322,
+    borderRadius: windowWidth * 0.05,
+    marginBottom: windowHeight * 0.02,
+    height: windowHeight * 0.06,
+    width: windowWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -176,7 +206,7 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     fontFamily: 'Poppins',
-    fontSize: 15,
+    fontSize: windowWidth * 0.04,
     fontStyle: 'normal',
     fontWeight: '700',
   },
@@ -185,8 +215,20 @@ const styles = StyleSheet.create({
   },
   registerText: {
     color: '#ADD8E6',
-    marginLeft: 5,
+    marginLeft: windowWidth * 0.01,
     fontFamily: 'Roboto',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    top: windowHeight * 0.015,
+    right: windowWidth * 0.05,
+    zIndex: 1,
+  },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    bottom: windowHeight * 0.01,
+    right: windowWidth * 0.01,
+    margin: 5
   },
 });
 

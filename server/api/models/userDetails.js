@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    resetPasswordOTP: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
+    },
     email: {
       type: String,
       unique: true,

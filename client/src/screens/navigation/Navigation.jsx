@@ -6,6 +6,8 @@ import {AuthContext} from '../../../context/authContext';
 // Screens
 import Home from '../tabs/Home';
 import Login from '../auth/Login';
+import ResetPasswordRequestScreen from '../auth/ResetPasswordRequestScreen';
+import OTPVerificationScreen from '../auth/OTPVerificationScreen';
 import SplashScreen from '../utils/SplashScreen';
 import Register from '../auth/Register';
 import Scheduler from '../tabs/Scheduler';
@@ -14,6 +16,16 @@ import MonthlyReport from '../tabs/MonthlyReport';
 import Profile from '../tabs/Profile';
 import EditProfile from '../utils/EditProfile';
 import AddSchedule from '../utils/AddSchedule';
+
+// Monthly Report Category Screens
+
+import AllMonthlyReport from '../monthlyReportCategory/AllMonthlyReports';
+import FYITMonthlyReport from '../monthlyReportCategory/FYITMonthlyReport';
+import FYCSMonthlyReport from '../monthlyReportCategory/FYCSMonthlyReport';
+import SYITMonthlyReport from '../monthlyReportCategory/SYITMonthlyReport';
+import SYCSMonthlyReport from '../monthlyReportCategory/SYCSMonthlyReport';
+import TYITMonthlyReport from '../monthlyReportCategory/TYITMonthlyReport';
+import TYCSMonthlyReport from '../monthlyReportCategory/TYCSMonthlyReport';
 
 //Icons
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -111,11 +123,44 @@ export default function Navigation() {
             component={EditProfile}
           />
           <Stack.Screen name="AddSchedule" component={AddSchedule} />
+          <Stack.Screen name="AllMonthlyReport" component={AllMonthlyReport} />
+          <Stack.Screen
+            name="FYITMonthlyReport"
+            component={FYITMonthlyReport}
+          />
+          <Stack.Screen
+            name="FYCSMonthlyReport"
+            component={FYCSMonthlyReport}
+          />
+          <Stack.Screen
+            name="SYITMonthlyReport"
+            component={SYITMonthlyReport}
+          />
+          <Stack.Screen
+            name="SYCSMonthlyReport"
+            component={SYCSMonthlyReport}
+          />
+          <Stack.Screen
+            name="TYITMonthlyReport"
+            component={TYITMonthlyReport}
+          />
+          <Stack.Screen
+            name="TYCSMonthlyReport"
+            component={TYCSMonthlyReport}
+          />
         </>
       ) : (
         <>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen
+            name="ResetPasswordRequestScreen"
+            component={ResetPasswordRequestScreen}
+          />
+          <Stack.Screen
+            name="OTPVerificationScreen"
+            component={OTPVerificationScreen}
+          />
         </>
       )}
     </Stack.Navigator>
