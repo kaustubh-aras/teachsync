@@ -1,27 +1,45 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useContext} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+import {AuthContext} from '../../../context/authContext';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+
+const {width, height} = Dimensions.get('window');
 
 const Home = () => {
+  const [state, setState] = useContext(AuthContext);
+  const navigation = useNavigation();
+
+  const goToDailyReportTab = () => {
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: 'MyTabs', // Name of your bottom tab navigator
+        params: {
+          screen: 'Daily Report', // Name of the tab you want to navigate to
+        },
+      }),
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Teacher's Home</Text>
+      <View style={styles.topSection}>
+        <Text style={styles.headerText}>Home</Text>
       </View>
 
-      <View style={styles.statsContainer}>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Tasks Completed</Text>
-          <Text style={styles.statValue}>15</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Pending Tasks</Text>
-          <Text style={styles.statValue}>5</Text>
-        </View>
+      <View style={styles.middleSection}>
+        <Text style={styles.welcomeText}>Welcome {state?.user.name}</Text>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={goToDailyReportTab}>
+          <Text style={styles.buttonText}>Add Reports</Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.addButton}>
-        <Text style={styles.addButtonLabel}>Add Task</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -31,45 +49,44 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: 'black',
+    justifyContent: 'center',
   },
-  header: {
+  topSection: {
     alignItems: 'center',
-    marginBottom: 20,
   },
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: 'white',
   },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  statBox: {
+  middleSection: {
     flex: 1,
-    padding: 20,
-    backgroundColor: 'black',
-    borderRadius: 8,
-    marginHorizontal: 10,
-  },
-  statLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  statValue: {
-    fontSize: 18,
-    color: '#3498db',
-  },
-  addButton: {
-    backgroundColor: '#3498db',
-    padding: 15,
-    borderRadius: 8,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  addButtonLabel: {
-    color: '#fff',
+  welcomeText: {
+    fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: width * 0.9,
+    height: height * 0.07,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'white',
+    marginVertical: height * 0.02,
+    backgroundColor: 'black', // Background color of the button
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 16, // Adjust the font size as needed
   },
 });
 
