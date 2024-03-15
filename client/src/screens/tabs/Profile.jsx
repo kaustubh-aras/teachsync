@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,18 +11,33 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import PushNotification from 'react-native-push-notification';
+import axios from 'axios';
 import {AuthContext} from '../../../context/authContext';
+import ImagePicker from 'react-native-image-picker';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 export default function Profile() {
   const [state, setState] = useContext(AuthContext);
   const navigation = useNavigation();
+  const [profileImage, setProfileImage] = useState(null);
 
   function goToEditProfile() {
     navigation.navigate('EditProfile');
+  }
+
+  function goToNotificationPage() {
+    navigation.navigate('NotificationPage');
+  }
+
+  function goToFeedbackPage() {
+    navigation.navigate('FeedbackPage');
+  }
+
+  function goToFAQPage() {
+    navigation.navigate('FAQPage');
   }
 
   const askToLogout = async () => {
@@ -42,34 +57,66 @@ export default function Profile() {
     // Cancels all Scheduled Notifications
     PushNotification.cancelAllLocalNotifications();
 
-    setState({ token: '', user: null });
+    setState({token: '', user: null});
     await AsyncStorage.removeItem('@auth');
     ToastAndroid.show('Logged Out Successfully', ToastAndroid.SHORT);
-    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+    navigation.reset({index: 0, routes: [{name: 'Login'}]});
+  };
+
+  const selectProfileImage = () => {
+    const options = {
+      mediaType: 'photo',
+      quality: 1,
+    };
+
+    // Use ImagePicker.launchImageLibrary instead of ImagePicker.showImagePicker
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = {uri: response.uri};
+        setProfileImage(source);
+
+        // Send the selected image to backend
+        saveProfileImage(response.uri);
+      }
+    });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        <Image
-          source={require('../../assets/profile.jpeg')}
-          style={styles.profileImage}
-        />
+        <TouchableOpacity onPress={selectProfileImage}>
+          <Image
+            source={
+              profileImage ? profileImage : require('../../assets/profile.jpeg')
+            }
+            style={styles.profileImage}
+          />
+        </TouchableOpacity>
         <Text style={styles.userName}>{state?.user.name}</Text>
 
-        <TouchableOpacity style={styles.editProfileButton} onPress={goToEditProfile}>
+        <TouchableOpacity
+          style={styles.editProfileButton}
+          onPress={goToEditProfile}>
           <Text style={styles.editProfileButtonText}>Edit Profile</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity
+          style={styles.profileButton}
+          onPress={goToNotificationPage}>
           <Text style={styles.profileButtonText}>Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity
+          style={styles.profileButton}
+          onPress={goToFeedbackPage}>
           <Text style={styles.profileButtonText}>Feedback</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity style={styles.profileButton} onPress={goToFAQPage}>
           <Text style={styles.profileButtonText}>FAQ</Text>
         </TouchableOpacity>
       </View>
