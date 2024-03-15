@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,10 @@ import {
   StyleSheet,
   RefreshControl,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import axios from 'axios';
-import {AuthContext} from '../../../context/authContext';
+import { AuthContext } from '../../../context/authContext';
 
 export default function AllMonthlyReport() {
   const [dailyReports, setDailyReports] = useState([]);
@@ -16,7 +17,7 @@ export default function AllMonthlyReport() {
   const [refreshing, setRefreshing] = useState(false);
 
   const [authState] = useContext(AuthContext);
-  const {user, token} = authState;
+  const { user, token } = authState;
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -70,8 +71,40 @@ export default function AllMonthlyReport() {
     }
   };
 
-  const renderDailyReportItem = ({item}) => (
-    
+  const handleDelete = async (reportId) => {
+    try {
+      await axios.delete(`/users/${user._id}/daily-reports/${reportId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Remove the deleted report from the state
+      setDailyReports((prevReports) =>
+        prevReports.filter((report) => report._id !== reportId)
+      );
+    } catch (error) {
+      console.error('Error deleting report:', error);
+    }
+  };
+
+  const renderDailyReportItem = ({ item }) => (
+    <TouchableOpacity
+      onLongPress={() =>
+        Alert.alert(
+          'Delete Report',
+          'Are you sure you want to delete this report?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Delete',
+              onPress: () => handleDelete(item._id),
+              style: 'destructive',
+            },
+          ]
+        )
+      }>
       <View style={styles.card}>
         <Text style={styles.cardText}>Date: {item.date}</Text>
         <Text style={styles.cardText}>Lectures: {item.lectures}</Text>
@@ -80,7 +113,7 @@ export default function AllMonthlyReport() {
         <Text style={styles.cardText}>Subject: {item.subject}</Text>
         <Text style={styles.cardText}>Topic: {item.topics.join(', ')}</Text>
       </View>
-    
+    </TouchableOpacity>
   );
 
   return (
@@ -93,7 +126,7 @@ export default function AllMonthlyReport() {
 
       <FlatList
         data={dailyReports}
-        keyExtractor={item => item._id}
+        keyExtractor={(item) => item._id}
         renderItem={renderDailyReportItem}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
