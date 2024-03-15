@@ -2,13 +2,17 @@ const mongoose = require("mongoose");
 
 const dailyReportSchema = new mongoose.Schema(
   {
+    reportID: {
+      type: String,
+      required: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     date: {
-      type: String,
+      type: Date,
       required: true,
     },
     lectures: {
