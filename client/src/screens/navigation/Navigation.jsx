@@ -18,7 +18,7 @@ import EditProfile from '../utils/EditProfile';
 import AddSchedule from '../utils/AddSchedule';
 import NotificationPage from '../utils/NotificationPage';
 import FeedbackPage from '../utils/FeedbackPage';
-import FAQPage from '../utils/FQAPage';
+import FAQPage from '../utils/FAQPage';
 
 // Monthly Report Category Screens
 
