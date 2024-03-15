@@ -16,6 +16,9 @@ import MonthlyReport from '../tabs/MonthlyReport';
 import Profile from '../tabs/Profile';
 import EditProfile from '../utils/EditProfile';
 import AddSchedule from '../utils/AddSchedule';
+import NotificationPage from '../utils/NotificationPage';
+import FeedbackPage from '../utils/FeedbackPage';
+import FAQPage from '../utils/FQAPage';
 
 // Monthly Report Category Screens
 
@@ -122,8 +125,11 @@ export default function Navigation() {
             name="EditProfile"
             component={EditProfile}
           />
+          <Stack.Screen name="NotificationPage" component={NotificationPage} />
           <Stack.Screen name="AddSchedule" component={AddSchedule} />
           <Stack.Screen name="AllMonthlyReport" component={AllMonthlyReport} />
+          <Stack.Screen name="FeedbackPage" component={FeedbackPage} />
+          <Stack.Screen name="FAQPage" component={FAQPage} />
           <Stack.Screen
             name="FYITMonthlyReport"
             component={FYITMonthlyReport}
