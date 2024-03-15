@@ -95,7 +95,13 @@ export default function DailyReport() {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Date</Text>
           <TouchableOpacity style={styles.input} onPress={() => setOpen(true)}>
-            <Text style={styles.label}>{date.toDateString()}</Text>
+            <Text style={styles.label}>
+              {`${date.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              })} ${date.toLocaleTimeString('en-IN')}`}
+            </Text>
           </TouchableOpacity>
           <DatePicker
             modal
@@ -131,7 +137,11 @@ export default function DailyReport() {
               onValueChange={(itemValue, itemIndex) =>
                 setSelectedCourse(itemValue)
               }>
-              <Picker label="Select Course" value="" style={{color: '#A9A9A9'}}/>
+              <Picker
+                label="Select Course"
+                value=""
+                style={{color: '#A9A9A9'}}
+              />
               <Picker.Item label="TYIT" value="TYIT" />
               <Picker.Item label="TYCS" value="TYCS" />
               <Picker.Item label="SYIT" value="SYIT" />
