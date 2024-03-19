@@ -10,26 +10,51 @@ import {
   ToastAndroid,
   Dimensions,
   Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import DatePicker from 'react-native-date-picker';
 import PushNotification from 'react-native-push-notification';
-import {request, PERMISSIONS} from 'react-native-permissions';
 import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
+
+const requestNotificationPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      {
+        title: 'TeachSync App Notification Permission',
+        message: 'TeachSync App needs access to your notifications',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('You can use notifications');
+    } else {
+      console.log('Notification permission denied');
+    }
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+};
 
 export default function AddSchedule() {
   const [addtask, editAddTask] = useState('');
   const [adddescription, setAddDescription] = useState('');
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const [notificationPermissionGranted, setNotificationPermissionGranted] =
+    useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
     checkAndRequestPermissions();
-
     if (Platform.OS === 'android') {
       configureChannels();
     }
@@ -37,16 +62,8 @@ export default function AddSchedule() {
 
   const checkAndRequestPermissions = async () => {
     try {
-      const scheduleExactAlarmResult = await request(
-        PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM,
-      );
-      const useExactAlarmResult = await request(
-        PERMISSIONS.ANDROID.USE_EXACT_ALARM,
-      );
-      const receiveBootCompletedResult = await request(
-        PERMISSIONS.ANDROID.RECEIVE_BOOT_COMPLETED,
-      );
-      const vibrateResult = await request(PERMISSIONS.ANDROID.VIBRATE);
+      const granted = await requestNotificationPermission();
+      setNotificationPermissionGranted(granted);
     } catch (err) {
       console.error('Error checking or requesting permissions:', err);
     }
@@ -64,6 +81,11 @@ export default function AddSchedule() {
   };
 
   const scheduleNotification = () => {
+    if (!notificationPermissionGranted) {
+      checkAndRequestPermissions();
+      return;
+    }
+
     if (!addtask || !adddescription) {
       Alert.alert('Empty Fields', 'Please enter both Title and Message');
       return;

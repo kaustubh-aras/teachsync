@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Switch, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, Switch, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid } from 'react-native';
 import PushNotification from 'react-native-push-notification';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const NotificationPage = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
@@ -11,30 +11,43 @@ const NotificationPage = () => {
   }, []);
 
   const checkNotificationPermission = async () => {
-    const result = await check(
-      Platform.select({
-        android: PERMISSIONS.ANDROID.NOTIFICATIONS,
-        ios: PERMISSIONS.IOS.NOTIFICATIONS,
-      })
-    );
-    if (result === RESULTS.GRANTED) {
-      setNotificationEnabled(true);
-    } else {
-      setNotificationEnabled(false);
+    try {
+      const result = await check(
+        Platform.select({
+          android: PERMISSIONS.ANDROID.NOTIFICATIONS,
+          ios: PERMISSIONS.IOS.NOTIFICATIONS,
+        })
+      );
+      if (result === RESULTS.GRANTED) {
+        setNotificationEnabled(true);
+      } else {
+        setNotificationEnabled(false);
+      }
+    } catch (error) {
+      console.error('Error checking notification permission:', error);
     }
   };
 
   const requestNotificationPermission = async () => {
-    const result = await request(
-      Platform.select({
-        android: PERMISSIONS.ANDROID.NOTIFICATIONS,
-        ios: PERMISSIONS.IOS.NOTIFICATIONS,
-      })
-    );
-    if (result === RESULTS.GRANTED) {
-      setNotificationEnabled(true);
-    } else {
-      setNotificationEnabled(false);
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        {
+          title: 'Notification Permission',
+          message: 'App needs access to your notifications',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setNotificationEnabled(true);
+        PushNotification.cancelAllLocalNotifications();
+      } else {
+        setNotificationEnabled(false);
+      }
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
     }
   };
 
