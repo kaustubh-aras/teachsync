@@ -60,7 +60,10 @@ const getDailyReportsController = async (req, res) => {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
-      })} ${report.date.toLocaleTimeString("en-IN")}`,
+      })} ${report.date.toLocaleTimeString("en-IN", {
+        hour12: true,
+        timeZone: "Asia/Kolkata",
+      })}`,
     }));
     // Calculate total sum of lectures
     const totalLectures = dailyReports.reduce(
@@ -116,10 +119,22 @@ const downloadDailyReportsController = async (req, res) => {
     }
 
     const data = [
-      ["Date", "Lectures", "Subject", "Topics", "Course", "Division"],
+      [
+        "Report ID",
+        "Date",
+        "Lectures",
+        "Subject",
+        "Topics",
+        "Course",
+        "Division",
+      ],
       ...dailyReports.map((report) => [
         report.reportID,
-        report.date,
+        `${report.date.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })} ${report.date.toLocaleTimeString("en-IN")}`,
         report.lectures,
         report.subject,
         report.topics.join(", "),

@@ -100,7 +100,10 @@ export default function DailyReport() {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
-              })} ${date.toLocaleTimeString('en-IN')}`}
+              })} ${date.toLocaleTimeString('en-IN', {
+                hour12: true,
+                timeZone: 'Asia/Kolkata',
+              })}`}
             </Text>
           </TouchableOpacity>
           <DatePicker
