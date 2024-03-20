@@ -1,10 +1,9 @@
+require("dotenv").config();
 const JWT = require("jsonwebtoken");
 const { hashPassword, comparePassword } = require("../utils/authHelper");
 const { User } = require("../models/userDetails");
 const shortid = require("shortid"); // Import shortid for generating unique IDs
-const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 
 // Controller for handling user registration
 const registerController = async (req, res) => {
@@ -269,7 +268,6 @@ const resetPassword = async (req, res) => {
   }
 };
 
-// Exporting the controllers for use in other files
 module.exports = {
   registerController,
   loginController,

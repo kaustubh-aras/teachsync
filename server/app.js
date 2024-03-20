@@ -18,7 +18,7 @@ app.use(express.json());
 
 // Route for the root path
 app.get("/", (req, res) => {
-  res.send("Hi");
+  res.send("Hi, Welcome to TeachSync");
 });
 
 // Routes
@@ -27,5 +27,4 @@ app.use("/api", userRoutes);
 
 app.listen(PORT, () => {
   console.log("Server Connected");
-  console.log(`Server is running on http://localhost:${PORT}`);
 });

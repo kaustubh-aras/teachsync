@@ -29,9 +29,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    profilePicture: {
-      type: String,
-    },
     dailyReports: [
       { type: mongoose.Schema.Types.ObjectId, ref: "DailyReport" },
     ],
