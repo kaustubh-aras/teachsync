@@ -14,7 +14,7 @@ const AuthProvider = ({children}) => {
 
   // Default Axios Settings
   axios.defaults.baseURL =
-    'https://teachsync-production-server.onrender.com/api';
+    'https://teachsync-production-server-x34i.onrender.com/api';
 
   // initial local storage data
   useEffect(() => {

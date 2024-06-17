@@ -1,4 +1,4 @@
-# TeachSync Documentation
+# TeachSync
 
 ## Overview
 
